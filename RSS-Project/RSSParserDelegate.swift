@@ -13,6 +13,9 @@ import Foundation
 //
 // Delegate class used for the RSSParser to dispatch operations at various points
 //
+// All methods are marked 'optional', meaning that they do not have to be implemented
+// in order for this to compile
+//
 @objc protocol RSSParserDelegate{
     
     //
@@ -25,19 +28,15 @@ import Foundation
     //
     optional func rssCompleteParsing()
     
-    //
-    // Method called in the event of an rss parsing error, indicating the line
-    // number and string reason for the error.
-    //
-    //optional func rssError( reason : String, line : Int )
+    optional func rssImageBeginDownload( index : Int )
     
     //
     // Method called every time an RSS Image is successfully downloaded
     //
-    optional func rssImageDownload( didGetImage index : Int )
+    optional func rssImageDownloadSuccess( index : Int )
     
     //
     // Method called every time an RSS Image is not successfully downloaded
     //
-    optional func rssImageDownload( didNotGetImage index : Int )
+    optional func rssImageDownloadFailure( index : Int )
 }

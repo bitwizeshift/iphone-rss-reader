@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		276772171C9E8F810019CD0B /* RSSFeedDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 276772161C9E8F810019CD0B /* RSSFeedDelegate.swift */; };
+		2799E5BD1C9E965100DA5C0B /* RefCountedIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2799E5BC1C9E965100DA5C0B /* RefCountedIndicator.swift */; };
 		560689701C9DD42B00293A51 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5606896F1C9DD42B00293A51 /* AppDelegate.swift */; };
 		560689721C9DD42B00293A51 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 560689711C9DD42B00293A51 /* ViewController.swift */; };
 		560689751C9DD42B00293A51 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 560689731C9DD42B00293A51 /* Main.storyboard */; };
@@ -20,9 +22,12 @@
 		5606898D1C9DE42400293A51 /* RSSParserDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5606898C1C9DE42300293A51 /* RSSParserDelegate.swift */; };
 		5606898F1C9DED2000293A51 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5606898E1C9DED2000293A51 /* Settings.swift */; };
 		560689911C9DF5F100293A51 /* RSSCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 560689901C9DF5F100293A51 /* RSSCollection.swift */; };
+		564319D41C9E02EF0020A542 /* RSSSharedCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 564319D31C9E02EF0020A542 /* RSSSharedCollection.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		276772161C9E8F810019CD0B /* RSSFeedDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSSFeedDelegate.swift; sourceTree = "<group>"; };
+		2799E5BC1C9E965100DA5C0B /* RefCountedIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RefCountedIndicator.swift; sourceTree = "<group>"; };
 		5606896C1C9DD42A00293A51 /* RSS-Project.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "RSS-Project.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5606896F1C9DD42B00293A51 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		560689711C9DD42B00293A51 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -38,6 +43,7 @@
 		5606898C1C9DE42300293A51 /* RSSParserDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSSParserDelegate.swift; sourceTree = "<group>"; };
 		5606898E1C9DED2000293A51 /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		560689901C9DF5F100293A51 /* RSSCollection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSSCollection.swift; sourceTree = "<group>"; };
+		564319D31C9E02EF0020A542 /* RSSSharedCollection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSSSharedCollection.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,6 +57,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		276772151C9E8F6C0019CD0B /* Delegates */ = {
+			isa = PBXGroup;
+			children = (
+				5606898C1C9DE42300293A51 /* RSSParserDelegate.swift */,
+				276772161C9E8F810019CD0B /* RSSFeedDelegate.swift */,
+			);
+			name = Delegates;
+			sourceTree = "<group>";
+		};
+		2799E5BE1C9E9EA100DA5C0B /* Util */ = {
+			isa = PBXGroup;
+			children = (
+				2799E5BC1C9E965100DA5C0B /* RefCountedIndicator.swift */,
+				560689831C9DD57100293A51 /* StringExtensions.swift */,
+			);
+			name = Util;
+			sourceTree = "<group>";
+		};
 		560689631C9DD42A00293A51 = {
 			isa = PBXGroup;
 			children = (
@@ -70,15 +94,15 @@
 		5606896E1C9DD42A00293A51 /* RSS-Project */ = {
 			isa = PBXGroup;
 			children = (
+				2799E5BE1C9E9EA100DA5C0B /* Util */,
 				560689851C9DE3E800293A51 /* RSS */,
 				5606896F1C9DD42B00293A51 /* AppDelegate.swift */,
 				560689711C9DD42B00293A51 /* ViewController.swift */,
+				5606898E1C9DED2000293A51 /* Settings.swift */,
 				560689731C9DD42B00293A51 /* Main.storyboard */,
 				560689761C9DD42B00293A51 /* Assets.xcassets */,
 				560689781C9DD42B00293A51 /* LaunchScreen.storyboard */,
 				5606897B1C9DD42B00293A51 /* Info.plist */,
-				560689831C9DD57100293A51 /* StringExtensions.swift */,
-				5606898E1C9DED2000293A51 /* Settings.swift */,
 			);
 			path = "RSS-Project";
 			sourceTree = "<group>";
@@ -86,12 +110,13 @@
 		560689851C9DE3E800293A51 /* RSS */ = {
 			isa = PBXGroup;
 			children = (
-				5606898C1C9DE42300293A51 /* RSSParserDelegate.swift */,
+				276772151C9E8F6C0019CD0B /* Delegates */,
 				560689811C9DD4CB00293A51 /* RSSParser.swift */,
 				560689901C9DF5F100293A51 /* RSSCollection.swift */,
 				560689861C9DE3FB00293A51 /* RSSFeed.swift */,
 				560689881C9DE40B00293A51 /* RSSChannel.swift */,
 				5606898A1C9DE41400293A51 /* RSSEntry.swift */,
+				564319D31C9E02EF0020A542 /* RSSSharedCollection.swift */,
 			);
 			name = RSS;
 			sourceTree = "<group>";
@@ -170,13 +195,16 @@
 				5606898B1C9DE41400293A51 /* RSSEntry.swift in Sources */,
 				560689841C9DD57100293A51 /* StringExtensions.swift in Sources */,
 				5606898D1C9DE42400293A51 /* RSSParserDelegate.swift in Sources */,
+				2799E5BD1C9E965100DA5C0B /* RefCountedIndicator.swift in Sources */,
 				560689721C9DD42B00293A51 /* ViewController.swift in Sources */,
 				560689911C9DF5F100293A51 /* RSSCollection.swift in Sources */,
+				564319D41C9E02EF0020A542 /* RSSSharedCollection.swift in Sources */,
 				560689821C9DD4CB00293A51 /* RSSParser.swift in Sources */,
 				560689871C9DE3FB00293A51 /* RSSFeed.swift in Sources */,
 				5606898F1C9DED2000293A51 /* Settings.swift in Sources */,
 				560689891C9DE40B00293A51 /* RSSChannel.swift in Sources */,
 				560689701C9DD42B00293A51 /* AppDelegate.swift in Sources */,
+				276772171C9E8F810019CD0B /* RSSFeedDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -326,6 +354,7 @@
 				560689801C9DD42B00293A51 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

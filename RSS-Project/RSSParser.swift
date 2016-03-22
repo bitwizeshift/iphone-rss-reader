@@ -20,10 +20,10 @@ class RSSParser: NSObject, NSXMLParserDelegate {
     //----------------------------------------------------------------------------
     
     // List of RSS Feed data
-    var data = RSSChannel()
+    var channel = RSSChannel()
     
     // Delegate class for parsing RSS data
-    var delegate : RSSParserDelegate?
+    var delegate : RSSParserDelegate? = nil
     
     //----------------------------------------------------------------------------
     // Private Members
@@ -64,10 +64,26 @@ class RSSParser: NSObject, NSXMLParserDelegate {
         parser!.delegate = self
     }
     
+    init( data: NSData, channel : RSSChannel ){
+        super.init()
+        self.parser = NSXMLParser(data: data)
+        self.parser!.delegate = self
+        self.channel = channel;
+    }
+    
     //
-    // Begins parsing the document
+    // Begins parsing the document, calling the method onCompletion() after 
+    // the parsing is finished
     //
-    internal func parse(){
+    func parse( onCompletion : ()-> Void){
+        parser!.parse()
+        onCompletion()
+    }
+    
+    //
+    // Parses the document
+    //
+    func parse(){
         parser!.parse()
     }
     
@@ -149,15 +165,15 @@ class RSSParser: NSObject, NSXMLParserDelegate {
                     
                     let urlString : String = source as! String;
                     
-                    // Strip all tags for the description
-                    //entry.description = foundCharacters.stringByReplacingOccurrencesOfString("<[^>]+>", withString: "", options: .RegularExpressionSearch, range: nil).trim()
-                    entry.imageURL    = NSURL( string: urlString );
+                    // Strip all tags from the description
+                    entry.entryDescription = foundCharacters.stringByReplacingOccurrencesOfString("<[^>]+>", withString: "", options: .RegularExpressionSearch, range: nil).trim()
+                    entry.imageURL = NSURL( string: urlString );
                 }
                 else if elementName == "category"{
                     entry.category = foundCharacters.trim();
                 }
                 else if elementName == "item"{
-                    data.entries.append(currentEntry!)
+                    channel.entries.append(currentEntry!)
                     currentEntry = nil
                 }
                 
@@ -171,14 +187,14 @@ class RSSParser: NSObject, NSXMLParserDelegate {
     // Called when the parser begins parsing the document
     //
     internal func parserDidStartDocument(parser: NSXMLParser){
-        delegate?.rssBeginParsing!()
+        self.delegate?.rssBeginParsing?()
     }
     
     //
     // Called when the parser finishes parsing the document
     //
     internal func parserDidEndDocument(parser: NSXMLParser) {
-        delegate?.rssCompleteParsing!()
+        self.delegate?.rssCompleteParsing?()
         var index = 0
         let imageQueue = dispatch_queue_create("Image Queue", DISPATCH_QUEUE_CONCURRENT);
         
@@ -186,8 +202,9 @@ class RSSParser: NSObject, NSXMLParserDelegate {
         
         
         // Download all images for
-        for entry in self.data.entries {
+        for entry in self.channel.entries {
             let i = index
+            self.delegate?.rssImageBeginDownload?(i)
             // Don't dispatch if a URL wasn't discovered
             if let url = entry.imageURL{
                 // Dispatch to download the image data
@@ -197,19 +214,19 @@ class RSSParser: NSObject, NSXMLParserDelegate {
                     // If the imageData was successfully loaded
                     if entry.imageData != nil {
                         dispatch_async(dispatch_get_main_queue(), {
-                            self.delegate?.rssImageDownload!( didGetImage: i )
+                            self.delegate?.rssImageDownloadSuccess?(i)
                         }); //dispatch_asyn
                         // If it wasn't successfully loaded
                     }else{
                         dispatch_async(dispatch_get_main_queue(), {
-                            self.delegate?.rssImageDownload!( didNotGetImage: i )
+                            self.delegate?.rssImageDownloadFailure?(i)
                         }); //dispatch_asyn
                     }
                 }) //dispatch_asyn
             } else{
                 let i = index
                 dispatch_async(dispatch_get_main_queue(), {
-                    self.delegate?.rssImageDownload!(didNotGetImage: i)
+                    self.delegate?.rssImageDownloadFailure?(i)
                 }); //dispatch_asyn
             } // if let url
             index++

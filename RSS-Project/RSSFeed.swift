@@ -9,25 +9,6 @@
 import Foundation
 
 //
-//
-//
-//
-//
-@objc protocol RSSFeedDelegate{
-    
-    //
-    // Method called when the parsing begins
-    //
-    optional func rssFeedBeginDownload()
-    
-    //
-    // Method called when the parsing completes
-    //
-    optional func rssFeedEndDownload()
-    
-}
-
-//
 // Class: RSSFeed
 //
 // This class represents an rss feed for a particular channel. It is used to
@@ -48,6 +29,8 @@ class RSSFeed : NSObject, NSCoding{
     private var recentEntry : NSDate? = nil;
     private var feedData    : NSData = NSData();
 
+    private var parser      : RSSParser? = nil
+
     //------------------------------------------------------------------------
     // MARK: - Private Static Attributes
     //------------------------------------------------------------------------
@@ -59,7 +42,8 @@ class RSSFeed : NSObject, NSCoding{
     // MARK: - Public Attribute
     //------------------------------------------------------------------------
     
-    var delegate : RSSFeedDelegate?
+    var delegate       : RSSFeedDelegate? = nil
+    var parserDelegate : RSSParserDelegate? = nil
 
     //------------------------------------------------------------------------
     // MARK: - Constructors
@@ -72,21 +56,17 @@ class RSSFeed : NSObject, NSCoding{
         self.feedURL = feedURL;
     }
     
-    init( feedURL : NSURL, channel : RSSChannel ){
-        self.feedURL = feedURL;
-        self.channel = channel;
-    }
-    
     //
     // Constructs a RSSEntry from a decoder
     //
     required init?(coder decoder: NSCoder) {
+        print("Decoding RSSFeed")
         feedURL = decoder.decodeObjectForKey(RSSFeed.FEED_URL_KEY) as! NSURL
         channel = decoder.decodeObjectForKey(RSSFeed.CHANNEL_KEY) as! RSSChannel
     }
 
     //------------------------------------------------------------------------
-    // MARK: - Public Attributes
+    // MARK: - Public Properties
     //------------------------------------------------------------------------
     
     //
@@ -145,54 +125,41 @@ class RSSFeed : NSObject, NSCoding{
     // MARK: - RSS Feed API
     //------------------------------------------------------------------------
     
+    private func update( clearCache : Bool ){
+        parser = RSSParser( data: self.feedData, channel: channel )
+        parser!.delegate = self.parserDelegate
+        
+        parser!.parse(){
+            self.recentEntry = NSDate()
+        }
+    }
+    
     //
-    // Updates the RSS Feed by downloading the new file and parsing it.
+    // Refreshes the RSS Feed by downloading the new file and parsing it.
     //
-    // if forceUpdate is true, then it will also erase all elements in the
+    // if clearCache is true, then it will also erase all elements in the
     // feed and perform a full refresh
     //
-    func update( forceUpdate : Bool ){
-        
-    }
-    
-    //
-    // Refreshes all images in the RSS Feed
-    //
-    //
-    //
-    func refreshImages( forceUpdate : Bool ){
-        
-    }
-    
-    //
-    // Downloads the RSS file to be parsed
-    //
-    func download(){
-        let url: NSURL = feedURL
+    func refresh( clearCache : Bool ){
+        let url:     NSURL = feedURL
         let request: NSURLRequest = NSURLRequest(URL: url)
         
         let config = NSURLSessionConfiguration.defaultSessionConfiguration()
         let session = NSURLSession(configuration: config)
         
         // Before the download, if a delegate is assigned, run the method
-        if let delegate = self.delegate{
-            if let beginDownload = delegate.rssFeedBeginDownload{
-                beginDownload();
-            }
-        }
+        self.delegate?.rssFeedBeginDownload?()
+        
         // Run the download task asynchronously to download the data
         let task = session.dataTaskWithRequest(request, completionHandler:{
             (data, response, error) in
+
             if let d = data{
+                self.delegate?.rssFeedDownloadSuccess?()
                 self.feedData = d
                 self.update( false )
-            }
-            
-            // Run delegate if one is assigned
-            if let delegate = self.delegate{
-                if let endDownload = delegate.rssFeedEndDownload{
-                    endDownload();
-                }
+            }else{
+                self.delegate?.rssFeedDownloadFailure?()
             }
         })
         task.resume()
@@ -224,57 +191,21 @@ class RSSFeed : NSObject, NSCoding{
     // Encodes the RSSChannel with the coder
     //
     func encodeWithCoder(coder: NSCoder) {
-
+        print("Encoding RSSFeed")
         coder.encodeObject(feedURL, forKey: RSSFeed.FEED_URL_KEY)
         coder.encodeObject(channel, forKey: RSSFeed.CHANNEL_KEY)
-        
     }
 
-    //------------------------------------------------------------------------
-    // MARK: - Saving to and from an archive
-    //------------------------------------------------------------------------
-    
-    //
-    // Acquires the data path for this RSSFeed
-    //
-    private func dataFilePath() -> String {
-        let paths = NSSearchPathForDirectoriesInDomains(
-            NSSearchPathDirectory.DocumentDirectory,
-            NSSearchPathDomainMask.UserDomainMask, true)
-        let documentsDirectory = paths[0] as NSString
-        return documentsDirectory.stringByAppendingPathComponent( Settings.filename )
-            as String
-    }
-    
-    //
-    // Loads the channel from a serialized file
-    //
-    func load(){ // un-archive saved data
-        let filePath = self.dataFilePath()
-        
-        if (NSFileManager.defaultManager().fileExistsAtPath(filePath)) {
-            let data       = NSMutableData(contentsOfFile: filePath)!
-            let unarchiver = NSKeyedUnarchiver(forReadingWithData: data)
-            
-            // If the deck does not exist, construct a new one
-            if let optChannel = unarchiver.decodeObjectForKey(Settings.rootKey) as? RSSChannel{
-                channel = optChannel
-            }
-            unarchiver.finishDecoding()
-        }
-    }
-    
-    //
-    // Save the channel data to a serialized file
-    //
-    func save(){
-        let filePath = self.dataFilePath()
+}
 
-        let data = NSMutableData()
-        let archiver = NSKeyedArchiver(forWritingWithMutableData: data)
-        archiver.encodeObject( channel, forKey: Settings.rootKey )
-        archiver.finishEncoding()
-        data.writeToFile(filePath, atomically: true)
-    }
+//------------------------------------------------------------------------
+// MARK: - Public Operators
+//------------------------------------------------------------------------
 
+func == ( lhs : RSSFeed, rhs : RSSFeed ) -> Bool {
+    return lhs.feedURL == rhs.feedURL
+}
+
+func != ( lhs : RSSFeed, rhs : RSSFeed ) -> Bool {
+    return lhs.feedURL != rhs.feedURL
 }
