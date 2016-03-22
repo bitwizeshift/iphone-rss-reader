@@ -8,7 +8,7 @@
 
 import Foundation
 
-class RSSCollection : NSObject, NSCoding, RSSParserDelegate{
+class RSSCollection : NSObject, NSCoding {
     
     //------------------------------------------------------------------------
     // MARK: - Public Static Attributes
