@@ -15,6 +15,9 @@ protocol MainTableViewControllerDelegate {
     optional func collapseSidePanels()
 }
 class MainTableViewController: UITableViewController {
+    
+    var collection : RSSCollection? = nil
+    var entries    : [RSSEntry]?    = nil
 
     @IBAction func openRightMenu(sender: AnyObject) {
         delegate?.toggleRightPanel?()
@@ -26,6 +29,8 @@ class MainTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        collection = RSSSharedCollection.getInstance().getCollection()
+        entries    = collection?.entriesChronological
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -35,6 +40,7 @@ class MainTableViewController: UITableViewController {
     var delegate: MainTableViewControllerDelegate?
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+        
         // Dispose of any resources that can be recreated.
     }
 
@@ -42,23 +48,26 @@ class MainTableViewController: UITableViewController {
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 0
+        return 1
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 0
+        if let entries = entries{
+            return entries.count
+        }else{
+            return 0
+        }
     }
 
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("MainFeedCell", forIndexPath: indexPath)
-
-        // Configure the cell...
+        let cell = tableView.dequeueReusableCellWithIdentifier("MainFeedCell", forIndexPath: indexPath) as! MainTableViewCell
+        
+        
 
         return cell
     }
-
 
     /*
     // Override to support conditional editing of the table view.
@@ -143,9 +152,7 @@ extension ContainerViewController: UIGestureRecognizerDelegate {
 }
 extension MainTableViewController: RightTableViewControllerDelegate {
     func filterSelected(filter: String) {
-        print("a")
-        print(filter)
-        
+
         //        imageView.image = animal.image
         //        titleLabel.text = animal.title
         //        creatorLabel.text = animal.creator
@@ -155,7 +162,6 @@ extension MainTableViewController: RightTableViewControllerDelegate {
 }
 extension MainTableViewController: SideTableViewControllerDelegate {
     func categorySelected(category: String) {
-        print(category)
 //        imageView.image = animal.image
 //        titleLabel.text = animal.title
 //        creatorLabel.text = animal.creator
