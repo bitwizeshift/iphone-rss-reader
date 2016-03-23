@@ -74,8 +74,12 @@ class MainTableViewController: UITableViewController, RSSParserDelegate, RSSFeed
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let entry = entries![indexPath.row]
         let cell = tableView.dequeueReusableCellWithIdentifier("MainFeedCell", forIndexPath: indexPath) as! MainTableViewCell
-        cell.storyImg.image  = UIImage( data: entry.imageData! )
+        if let data = entry.imageData {
+            cell.storyImg.image  = UIImage( data: data )
+        }
+        
         cell.storyTitle.text = entry.title
+        cell.storyCategory.text = entry.category
 
         return cell
     }

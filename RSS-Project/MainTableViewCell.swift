@@ -12,9 +12,12 @@ class MainTableViewCell: UITableViewCell {
 
     @IBOutlet weak var storyImg: UIImageView!
     @IBOutlet weak var storyTitle: UILabel!
+    @IBOutlet weak var storyCategory: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        self.storyImg.layer.cornerRadius = 5
+        self.storyImg.clipsToBounds = true
         // Initialization code
     }
 
