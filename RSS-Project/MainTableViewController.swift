@@ -14,8 +14,11 @@ protocol MainTableViewControllerDelegate {
     optional func toggleRightPanel()
     optional func collapseSidePanels()
 }
-class MainTableViewController: UITableViewController {
-    
+class MainTableViewController: UITableViewController, RSSParserDelegate, RSSFeedDelegate {
+
+    var delegate: MainTableViewControllerDelegate?
+    var indicator = RefCountedIndicator()
+
     var collection : RSSCollection? = nil
     var entries    : [RSSEntry]?    = nil
 
@@ -26,18 +29,25 @@ class MainTableViewController: UITableViewController {
         delegate?.toggleLeftPanel?()
         
     }
+        
     override func viewDidLoad() {
         super.viewDidLoad()
-
         collection = RSSSharedCollection.getInstance().getCollection()
-        entries    = collection?.entriesChronological
+        collection!.delegate = self
+        collection!.addFeedURL( NSURL(string: "http://rss.cbc.ca/lineup/topstories.xml")! )
+        collection!.addFeedURL( NSURL(string: "http://www.xul.fr/rss.xml")! )
+        collection!.refresh( false );
+        entries = collection!.entries
+        
+        
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+        self.tableView.reloadData()
     }
-    var delegate: MainTableViewControllerDelegate?
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         
@@ -62,9 +72,10 @@ class MainTableViewController: UITableViewController {
 
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let entry = entries![indexPath.row]
         let cell = tableView.dequeueReusableCellWithIdentifier("MainFeedCell", forIndexPath: indexPath) as! MainTableViewCell
-        
-        
+        cell.storyImg.image  = UIImage( data: entry.imageData! )
+        cell.storyTitle.text = entry.title
 
         return cell
     }
@@ -113,8 +124,115 @@ class MainTableViewController: UITableViewController {
         // Pass the selected object to the new view controller.
     }
     */
+    
+    //------------------------------------------------------------
+    // MARK: - RSSParser Delegates
+    //------------------------------------------------------------
+    
+    //
+    // Method called when the parsing begins
+    //
+    func rssBeginParsing(){
+        print("Beginning RSS Parsing")
+    }
+    
+    //
+    // Method called when the parsing completes
+    //
+    func rssCompleteParsing(){
+        print("Ending RSS Parsing")
+        entries = collection!.entriesChronological
+    }
+    
+    func rssImageBeginDownload(index: Int) {
+        indicator.enable()
+    }
+    
+    //
+    // Method called when image is downloaded
+    //
+    func rssImageDownloadSuccess( index: Int ){
+        print("got image number " + String(index) )
+        indicator.disable()
+    }
+    
+    //
+    // Method called when image is not downloaded
+    //
+    func rssImageDownloadFailure( index: Int ){
+        print("Unable to download image " + String(index) )
+        indicator.disable()
+    }
+    
+    //------------------------------------------------------------
+    // MARK: - RSSFeed Delegates
+    //------------------------------------------------------------
 
+    
+    //
+    // Feed is starting to download, enable status-indicator
+    //
+    func rssFeedBeginDownload(){
+        print("Start Download")
+        indicator.enable()
+        
+    }
+    
+    //
+    // Method called when the RSS Feed is downloaded successfully
+    //
+    func rssFeedDownloadSuccess(){
+        entries = collection!.entriesAlphabetical
+        self.tableView.reloadData()
+        
+    
+        print("Complete download")
+        indicator.disable()
+        
+    }
+    
+    //
+    // Method called when the RSS feed fails to successfully download
+    //
+    func rssFeedDownloadFailure(){
+        print("Failed to download")
+        indicator.disable()
+    }
+    
+    //
+    // Method called when an image is about to be downloaded
+    //
+    func rssFeedBeginImageDownload( index : Int, entry : RSSEntry? ){
+        indicator.enable()
+        print("Downloading image \(index)")
+    }
+    
+    //
+    // Method called when an image is downloaded
+    //
+    func rssFeedImageDownloaded( index : Int, entry : RSSEntry? ){
+        dispatch_async(dispatch_get_main_queue(), { () -> Void in
+            self.tableView.reloadData()
+        })
+        
+        print("[Success] Image \(index) downloaded")
+        indicator.disable()
+    }
+    
+    //
+    // Method called when the RSS feed fails to successfully download
+    //
+    func rssFeedImageNotDownloaded( index : Int, entry : RSSEntry? ){
+        dispatch_async(dispatch_get_main_queue(), { () -> Void in
+            self.tableView.reloadData()
+        })
+        
+        print("[Failure] Image \(index) failed to download")
+        indicator.disable()
+    }
 }
+
+
 extension ContainerViewController: UIGestureRecognizerDelegate {
     // MARK: Gesture recognizer
     
@@ -150,6 +268,7 @@ extension ContainerViewController: UIGestureRecognizerDelegate {
     }
     
 }
+
 extension MainTableViewController: RightTableViewControllerDelegate {
     func filterSelected(filter: String) {
 
@@ -160,6 +279,7 @@ extension MainTableViewController: RightTableViewControllerDelegate {
         delegate?.collapseSidePanels?()
     }
 }
+
 extension MainTableViewController: SideTableViewControllerDelegate {
     func categorySelected(category: String) {
 //        imageView.image = animal.image

@@ -11,16 +11,10 @@ import Foundation
 class RSSCollection : NSObject, NSCoding {
     
     //------------------------------------------------------------------------
-    // MARK: - Public Static Attributes
-    //------------------------------------------------------------------------
-    
-    var feedDelegate   : RSSFeedDelegate?   = nil
-    var parserDelegate : RSSParserDelegate? = nil
-    
-    //------------------------------------------------------------------------
     // MARK: - Private Attributes
     //------------------------------------------------------------------------
 
+    private var feedDelegate   : RSSFeedDelegate?   = nil
     private var rssFeeds    = [RSSFeed]()
     private var favorites   = [RSSEntry]()
     private var blacklisted = [RSSEntry]()
@@ -59,11 +53,42 @@ class RSSCollection : NSObject, NSCoding {
     //----------------------------------------------------------------------------
     
     //
+    // Delegate for handling the feed delegates.
+    // It retroactively passes the delegate to existing feeds if one is changed.
+    //
+    var delegate : RSSFeedDelegate?{
+        get{
+            return self.feedDelegate;
+        }
+        set(value){
+            self.feedDelegate = value;
+            for feed in self.feeds{
+                feed.delegate = self.feedDelegate
+            }
+        }
+    }
+    
+    //
     // Property for being able to only get the feeds (non-mutating)
     //
     var feeds : [RSSFeed]{
         get{
             return rssFeeds
+        }
+    }
+    
+    //
+    // Property to retrieve all entries not in any specified order
+    //
+    var entries : [RSSEntry]{
+        get{
+            var e = [RSSEntry]()
+            for feed in feeds{
+                for entry in feed.entries{
+                    e.append(entry)
+                }
+            }
+            return e;
         }
     }
 
@@ -130,8 +155,7 @@ class RSSCollection : NSObject, NSCoding {
     //
     func addFeedURL( url : NSURL ) -> Bool {
         let newfeed = RSSFeed( feedURL: url )
-        newfeed.delegate       = self.feedDelegate
-        newfeed.parserDelegate = self.parserDelegate
+        newfeed.delegate = self.feedDelegate
         
         return self.addFeed( newfeed )
     }

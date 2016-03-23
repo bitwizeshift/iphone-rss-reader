@@ -163,11 +163,11 @@ class RSSParser: NSObject, NSXMLParserDelegate {
                     theScanner.scanCharactersFromSet( quoteSet, intoString: nil )
                     theScanner.scanUpToCharactersFromSet( quoteSet, intoString: &source )
                     
-                    let urlString : String = source as! String;
-                    
-                    // Strip all tags from the description
-                    entry.entryDescription = foundCharacters.stringByReplacingOccurrencesOfString("<[^>]+>", withString: "", options: .RegularExpressionSearch, range: nil).trim()
-                    entry.imageURL = NSURL( string: urlString );
+                    if let urlString = source as? String{
+                        entry.imageURL = NSURL( string: urlString );
+                    }else{
+                        entry.entryDescription = foundCharacters.stringByReplacingOccurrencesOfString("<[^>]+>", withString: "", options: .RegularExpressionSearch, range: nil).trim()
+                    }
                 }
                 else if elementName == "category"{
                     entry.category = foundCharacters.trim();

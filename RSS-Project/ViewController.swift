@@ -23,8 +23,7 @@ class ViewController: UIViewController, RSSParserDelegate, RSSFeedDelegate {
 
         let url: NSURL = NSURL(string: URL_PATH)!
         
-        collection.parserDelegate = self
-        collection.feedDelegate   = self
+        collection.delegate = self
                 
         print(collection.addFeedURL( url ))
         print(collection.addFeedURL( url ))

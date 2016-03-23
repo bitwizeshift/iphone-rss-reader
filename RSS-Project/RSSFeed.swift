@@ -18,7 +18,7 @@ import Foundation
 // It also handles metadata necessary for determining when to redownload 
 // data for a specific feed, such as the most recent entry
 //
-class RSSFeed : NSObject, NSCoding{
+class RSSFeed : NSObject, NSCoding, RSSParserDelegate{
     
     //------------------------------------------------------------------------
     // MARK: - Private Attributes
@@ -42,8 +42,7 @@ class RSSFeed : NSObject, NSCoding{
     // MARK: - Public Attribute
     //------------------------------------------------------------------------
     
-    var delegate       : RSSFeedDelegate? = nil
-    var parserDelegate : RSSParserDelegate? = nil
+    var delegate : RSSFeedDelegate? = nil
 
     //------------------------------------------------------------------------
     // MARK: - Constructors
@@ -127,7 +126,7 @@ class RSSFeed : NSObject, NSCoding{
     
     private func update( clearCache : Bool ){
         parser = RSSParser( data: self.feedData, channel: channel )
-        parser!.delegate = self.parserDelegate
+        parser!.delegate = self
         
         parser!.parse(){
             self.recentEntry = NSDate()
@@ -194,6 +193,41 @@ class RSSFeed : NSObject, NSCoding{
         print("Encoding RSSFeed")
         coder.encodeObject(feedURL, forKey: RSSFeed.FEED_URL_KEY)
         coder.encodeObject(channel, forKey: RSSFeed.CHANNEL_KEY)
+    }
+    
+    //------------------------------------------------------------------------
+    // MARK: - RSSParser Delegates
+    //------------------------------------------------------------------------
+    
+
+    func rssBeginParsing(){
+        
+    }
+    
+    //
+    // Method called when the parsing completes
+    //
+    func rssCompleteParsing(){
+        channel = parser!.channel
+        delegate?.rssFeedUpdated?()
+    }
+    
+    func rssImageBeginDownload( index : Int ){
+        delegate?.rssFeedBeginImageDownload?( index, entry: entries[index] )
+    }
+    
+    //
+    // Method called every time an RSS Image is successfully downloaded
+    //
+    func rssImageDownloadSuccess( index : Int ){
+        delegate?.rssFeedImageDownloaded?( index, entry: entries[index] )
+    }
+    
+    //
+    // Method called every time an RSS Image is not successfully downloaded
+    //
+    func rssImageDownloadFailure( index : Int ){
+        delegate?.rssFeedImageNotDownloaded?( index, entry: entries[index] )
     }
 
 }
