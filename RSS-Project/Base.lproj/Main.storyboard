@@ -18,14 +18,37 @@
                             <rect key="frame" x="0.0" y="0.0" width="600" height="120"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
-                                <imageView userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" image="left-menu" translatesAutoresizingMaskIntoConstraints="NO" id="4wE-2x-y2j">
-                                    <rect key="frame" x="0.0" y="0.0" width="600" height="120"/>
+                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="rss-icon-large" translatesAutoresizingMaskIntoConstraints="NO" id="4wE-2x-y2j">
+                                    <rect key="frame" x="250" y="10" width="100" height="100"/>
                                     <constraints>
-                                        <constraint firstAttribute="height" constant="120" id="MJw-hR-s01"/>
+                                        <constraint firstAttribute="height" constant="100" id="MJw-hR-s01"/>
+                                        <constraint firstAttribute="height" constant="100" id="cji-DB-8tM"/>
+                                        <constraint firstAttribute="width" constant="100" id="tnS-LN-gvX"/>
+                                        <constraint firstAttribute="width" constant="100" id="yOi-sR-xkc"/>
                                     </constraints>
+                                    <variation key="default">
+                                        <mask key="constraints">
+                                            <exclude reference="MJw-hR-s01"/>
+                                            <exclude reference="tnS-LN-gvX"/>
+                                        </mask>
+                                    </variation>
                                 </imageView>
                             </subviews>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <color key="backgroundColor" red="0.32941176470588235" green="0.32941176470588235" blue="0.32941176470588235" alpha="1" colorSpace="calibratedRGB"/>
+                            <constraints>
+                                <constraint firstItem="4wE-2x-y2j" firstAttribute="centerY" secondItem="BiI-Qe-7j3" secondAttribute="centerY" id="8b0-E7-qQc"/>
+                                <constraint firstItem="4wE-2x-y2j" firstAttribute="centerX" secondItem="BiI-Qe-7j3" secondAttribute="centerX" id="coI-0G-tbC"/>
+                                <constraint firstItem="4wE-2x-y2j" firstAttribute="leading" secondItem="BiI-Qe-7j3" secondAttribute="leading" constant="-320" id="h60-Ju-Ark"/>
+                                <constraint firstItem="4wE-2x-y2j" firstAttribute="centerX" secondItem="BiI-Qe-7j3" secondAttribute="centerX" id="pHj-Mz-fUR"/>
+                                <constraint firstItem="4wE-2x-y2j" firstAttribute="leading" secondItem="BiI-Qe-7j3" secondAttribute="leading" constant="100" id="suH-9d-gdj"/>
+                            </constraints>
+                            <variation key="default">
+                                <mask key="constraints">
+                                    <exclude reference="h60-Ju-Ark"/>
+                                    <exclude reference="pHj-Mz-fUR"/>
+                                    <exclude reference="suH-9d-gdj"/>
+                                </mask>
+                            </variation>
                         </view>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="SideMenuCell" rowHeight="80" id="DFg-Ty-tiP" customClass="SideTableViewCell" customModule="RSS_Project" customModuleProvider="target">
@@ -36,12 +59,12 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="space-invader-small" translatesAutoresizingMaskIntoConstraints="NO" id="qpV-gN-Sjf">
-                                            <rect key="frame" x="8" y="8" width="70" height="70"/>
+                                            <rect key="frame" x="8" y="8" width="60" height="60"/>
                                             <constraints>
-                                                <constraint firstAttribute="width" constant="70" id="6bz-hP-9oq"/>
+                                                <constraint firstAttribute="width" constant="60" id="6bz-hP-9oq"/>
                                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="53.5" id="eug-Og-me3"/>
                                                 <constraint firstAttribute="width" constant="54" id="f6B-L8-JK2"/>
-                                                <constraint firstAttribute="height" constant="70" id="fHk-0o-PZc"/>
+                                                <constraint firstAttribute="height" constant="60" id="fHk-0o-PZc"/>
                                             </constraints>
                                             <variation key="default">
                                                 <mask key="constraints">
@@ -51,7 +74,7 @@
                                             </variation>
                                         </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6Tf-j2-saO">
-                                            <rect key="frame" x="88" y="33" width="42" height="20.5"/>
+                                            <rect key="frame" x="78" y="27.5" width="42" height="20.5"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
@@ -142,13 +165,13 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="My Feed" id="da3-8q-AVb">
-                        <barButtonItem key="leftBarButtonItem" image="category-icon" style="done" id="pCi-wb-Iu1">
+                        <barButtonItem key="leftBarButtonItem" image="rss-icon-small" style="done" id="pCi-wb-Iu1">
                             <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="0.59999999999999998" colorSpace="calibratedRGB"/>
                             <connections>
                                 <action selector="openSideMenu:" destination="bgr-J8-iu3" id="3v3-gU-TkI"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" image="filter-icon" style="done" id="9PW-Nh-VA4">
+                        <barButtonItem key="rightBarButtonItem" image="filter-icon-small" style="done" id="9PW-Nh-VA4">
                             <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="0.59999999999999998" colorSpace="calibratedRGB"/>
                             <connections>
                                 <action selector="openRightMenu:" destination="bgr-J8-iu3" id="mcK-Xc-54h"/>
@@ -172,17 +195,25 @@
                             <rect key="frame" x="0.0" y="0.0" width="600" height="120"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
-                                <imageView userInteractionEnabled="NO" contentMode="right" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" image="right-menu" translatesAutoresizingMaskIntoConstraints="NO" id="xer-NV-bRr">
-                                    <rect key="frame" x="0.0" y="-4" width="600" height="128"/>
+                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="filter-icon-large" translatesAutoresizingMaskIntoConstraints="NO" id="xer-NV-bRr">
+                                    <rect key="frame" x="250" y="10" width="100" height="100"/>
                                     <constraints>
-                                        <constraint firstAttribute="height" constant="120" id="aIV-Ro-vCS"/>
+                                        <constraint firstAttribute="width" constant="100" id="W85-7f-VEX"/>
+                                        <constraint firstAttribute="height" constant="100" id="aIV-Ro-vCS"/>
                                     </constraints>
                                 </imageView>
                             </subviews>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <color key="backgroundColor" red="0.3294117647" green="0.3294117647" blue="0.3294117647" alpha="1" colorSpace="calibratedRGB"/>
                             <constraints>
-                                <constraint firstAttribute="trailing" secondItem="xer-NV-bRr" secondAttribute="trailing" id="Yto-zH-LxY"/>
+                                <constraint firstAttribute="trailing" secondItem="xer-NV-bRr" secondAttribute="trailing" constant="100" id="ccM-zs-NXt"/>
+                                <constraint firstItem="xer-NV-bRr" firstAttribute="centerX" secondItem="eZe-8d-8TW" secondAttribute="centerX" id="dzC-aa-pJi"/>
+                                <constraint firstItem="xer-NV-bRr" firstAttribute="centerY" secondItem="eZe-8d-8TW" secondAttribute="centerY" id="gEZ-mA-r68"/>
                             </constraints>
+                            <variation key="default">
+                                <mask key="constraints">
+                                    <exclude reference="ccM-zs-NXt"/>
+                                </mask>
+                            </variation>
                         </view>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="RightTableViewCell" selectionStyle="default" indentationWidth="10" reuseIdentifier="RightTableViewCell" id="Kjd-3W-aQv" customClass="RightTableViewCell" customModule="RSS_Project" customModuleProvider="target">
@@ -222,10 +253,10 @@
         </scene>
     </scenes>
     <resources>
-        <image name="category-icon" width="33" height="33"/>
-        <image name="filter-icon" width="33" height="33"/>
-        <image name="left-menu" width="300" height="120"/>
-        <image name="right-menu" width="300" height="120"/>
+        <image name="filter-icon-large" width="120" height="120"/>
+        <image name="filter-icon-small" width="33" height="33"/>
+        <image name="rss-icon-large" width="120" height="120"/>
+        <image name="rss-icon-small" width="33" height="33"/>
         <image name="space-invader-small" width="35" height="35"/>
     </resources>
 </document>
