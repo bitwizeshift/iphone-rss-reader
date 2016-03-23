@@ -9,6 +9,9 @@
 import UIKit
 
 class WebViewController: UIViewController, UITabBarDelegate {
+    
+    
+    @IBOutlet weak var spinner: UIActivityIndicatorView!
     var webURL: NSURL!
     @IBOutlet weak var webView: UIWebView!
     @IBAction func forwardNav(sender: AnyObject) {
@@ -25,9 +28,10 @@ class WebViewController: UIViewController, UITabBarDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
 //        let url = NSURL (string: self.webURL);
+        self.spinner.startAnimating()
         let requestObj = NSURLRequest(URL: webURL);
         webView.loadRequest(requestObj);
-
+        self.spinner.stopAnimating()
         // Do any additional setup after loading the view.
     }
 

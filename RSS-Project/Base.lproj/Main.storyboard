@@ -281,6 +281,10 @@
                                     <constraint firstAttribute="height" constant="50" id="p1R-HG-CuP"/>
                                 </constraints>
                             </view>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="65x-b5-iIl">
+                                <rect key="frame" x="282" y="281" width="37" height="37"/>
+                                <color key="color" red="0.1517485975" green="0.79322932430000004" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -289,11 +293,14 @@
                             <constraint firstAttribute="trailingMargin" secondItem="llB-AE-BTl" secondAttribute="trailing" constant="-20" id="CG5-es-2Gu"/>
                             <constraint firstItem="llB-AE-BTl" firstAttribute="leading" secondItem="5Dm-Zu-zTN" secondAttribute="leadingMargin" constant="-20" id="PRM-Mw-hIS"/>
                             <constraint firstAttribute="trailingMargin" secondItem="Blb-2g-9qi" secondAttribute="trailing" id="VtF-vG-Iy0"/>
+                            <constraint firstItem="65x-b5-iIl" firstAttribute="centerX" secondItem="5Dm-Zu-zTN" secondAttribute="centerX" id="c1U-gZ-FQh"/>
                             <constraint firstItem="jm6-lm-uZP" firstAttribute="top" secondItem="llB-AE-BTl" secondAttribute="bottom" id="hEx-Q0-iSJ"/>
                             <constraint firstItem="Blb-2g-9qi" firstAttribute="leading" secondItem="5Dm-Zu-zTN" secondAttribute="leadingMargin" id="jrE-qO-0ko"/>
+                            <constraint firstItem="65x-b5-iIl" firstAttribute="centerY" secondItem="5Dm-Zu-zTN" secondAttribute="centerY" id="pCc-VM-deU"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="spinner" destination="65x-b5-iIl" id="qeN-W7-qd3"/>
                         <outlet property="webView" destination="Blb-2g-9qi" id="BHD-Qd-n0F"/>
                     </connections>
                 </viewController>
