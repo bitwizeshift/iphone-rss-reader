@@ -30,6 +30,7 @@
 		ECC7A2B61C9DE08C00999899 /* ContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECC7A2B51C9DE08C00999899 /* ContainerViewController.swift */; };
 		ECC7A2B81C9DF09900999899 /* RightTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECC7A2B71C9DF09900999899 /* RightTableViewController.swift */; };
 		ECC7A2BA1C9DF0A700999899 /* RightTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECC7A2B91C9DF0A700999899 /* RightTableViewCell.swift */; };
+		ECDFDA661CA225E80009C859 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECDFDA651CA225E80009C859 /* WebViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -58,6 +59,7 @@
 		ECC7A2B51C9DE08C00999899 /* ContainerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContainerViewController.swift; sourceTree = "<group>"; };
 		ECC7A2B71C9DF09900999899 /* RightTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RightTableViewController.swift; sourceTree = "<group>"; };
 		ECC7A2B91C9DF0A700999899 /* RightTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RightTableViewCell.swift; sourceTree = "<group>"; };
+		ECDFDA651CA225E80009C859 /* WebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -139,6 +141,7 @@
 		567B63BB1CA1FD2B00500308 /* VIew Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				ECDFDA651CA225E80009C859 /* WebViewController.swift */,
 				ECC7A2B51C9DE08C00999899 /* ContainerViewController.swift */,
 				ECC7A2B71C9DF09900999899 /* RightTableViewController.swift */,
 				ECC7A2B91C9DF0A700999899 /* RightTableViewCell.swift */,
@@ -225,6 +228,7 @@
 				560689841C9DD57100293A51 /* StringExtensions.swift in Sources */,
 				5606898D1C9DE42400293A51 /* RSSParserDelegate.swift in Sources */,
 				2799E5BD1C9E965100DA5C0B /* RefCountedIndicator.swift in Sources */,
+				ECDFDA661CA225E80009C859 /* WebViewController.swift in Sources */,
 				560689721C9DD42B00293A51 /* ViewController.swift in Sources */,
 				560689911C9DF5F100293A51 /* RSSCollection.swift in Sources */,
 				564319D41C9E02EF0020A542 /* RSSSharedCollection.swift in Sources */,
