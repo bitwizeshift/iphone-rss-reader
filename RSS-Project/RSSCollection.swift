@@ -166,9 +166,13 @@ class RSSCollection : NSObject, NSCoding {
     // This function returns false if the feed already exists in the collection
     //
     func addFeed( feed : RSSFeed ) -> Bool {
-        if feeds.contains(feed) {
-            return false
+        
+        for f in feeds{
+            if f == feed{
+                return false;
+            }
         }
+        
         rssFeeds.append(feed)
         return true
     }

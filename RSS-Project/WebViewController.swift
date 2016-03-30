@@ -7,54 +7,135 @@
 //
 
 import UIKit
+import WebKit
 
-class WebViewController: UIViewController, UITabBarDelegate {
+class WebViewController: UIViewController, UITabBarDelegate, WKNavigationDelegate {
     
+    //------------------------------------------------------------------------
+    // MARK: - Public Variables
+    //------------------------------------------------------------------------
     
-    @IBOutlet weak var spinner: UIActivityIndicatorView!
-    var webURL: NSURL!
-    @IBOutlet weak var webView: UIWebView!
+    var webView : WKWebView = WKWebView()
+    var spinnerIndicator : UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRectMake(0,0, 100, 100))
+    var entry: RSSEntry? = nil
+    
+    //------------------------------------------------------------------------
+    // MARK: - Outlets
+    //------------------------------------------------------------------------
+
+    @IBOutlet weak var navigationBar: UINavigationItem!
+    @IBOutlet weak var bottomBar: UIView!
+
+    //------------------------------------------------------------------------
+    // MARK: - Actions
+    //------------------------------------------------------------------------
+    
+    //
+    // Forward navigation
+    //
     @IBAction func forwardNav(sender: AnyObject) {
-        webView.goForward()
+        if (self.webView.canGoForward) {
+            webView.goForward()
+        }
     }
    
+    //
+    // Refresh navigation
+    //
     @IBAction func refreshWebView(sender: AnyObject) {
         webView.reload()
     }
+    
+    //
+    // Backward navigation
+    //
     @IBAction func backNav(sender: AnyObject) {
-        webView.goBack()
+        if (self.webView.canGoBack) {
+            webView.goBack()
+        }
     }
     
+    //------------------------------------------------------------------------
+    // MARK: - View Loading
+    //------------------------------------------------------------------------
+    
+    //
+    // Initialization when the view loads
+    //
     override func viewDidLoad() {
         super.viewDidLoad()
-//        let url = NSURL (string: self.webURL);
-        self.spinner.startAnimating()
-        let requestObj = NSURLRequest(URL: webURL);
-        webView.loadRequest(requestObj);
-        self.spinner.stopAnimating()
-        // Do any additional setup after loading the view.
+        
+        // Allow the web-view gestures
+        self.webView.allowsBackForwardNavigationGestures = true
+        
+        // Set the navigation title
+        self.navigationBar.title = entry!.title
+        
+        // Set the background color to white
+        self.view.backgroundColor = UIColor.whiteColor()
+        
+        // Initiate the indicator
+        self.spinnerIndicator.center = self.view.center
+        self.spinnerIndicator.hidesWhenStopped = true
+        self.spinnerIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
+        
+        // Add subviews to the current view
+        self.view.addSubview(self.webView)
+        self.view.addSubview(self.spinnerIndicator)
+        
+        // Load the current request
+        self.webView.navigationDelegate = self
+        self.webView.loadRequest(NSURLRequest(URL: entry!.link!))
     }
 
+    //
+    // Did this veiw receive a memory warning?
+    //
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
-    func tabBar(tabBar: UITabBar, didSelectItem item: UITabBarItem) {
-//        if(item.tag == 1) {
-            print(1)
-//        }
-        //This method will be called when user changes tab.
+    //
+    // Create the subview layouts
+    //
+    override func viewWillLayoutSubviews() {
+        let BOTTOM_MARGIN : CGFloat = self.bottomBar.frame.size.height;
+        let TOP_MARGIN    : CGFloat = UIApplication.sharedApplication().statusBarFrame.size.height
+        self.webView.frame = CGRectMake(0, TOP_MARGIN, self.view.frame.size.width, self.view.frame.size.height - BOTTOM_MARGIN - TOP_MARGIN)
+        
     }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    
+    //------------------------------------------------------------------------
+    // MARK: - WKNavigationDelegate
+    //------------------------------------------------------------------------
+    
+    //
+    // Delegate for beginning web navigation
+    //
+    func webView(webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
+        self.spinnerIndicator.startAnimating()
+        UIApplication.sharedApplication().networkActivityIndicatorVisible = true
+        NSLog("Begin Web Navigation")
     }
-    */
+    
+    //
+    // Delegate for failing web navigation
+    //
+    func webView(webView: WKWebView, didFailNavigation navigation: WKNavigation!, withError error: NSError){
+        self.spinnerIndicator.stopAnimating()
+        UIApplication.sharedApplication().networkActivityIndicatorVisible = false
+        NSLog("Failed Navigation %@", error.localizedDescription)
+    }
+    
+    //
+    // Delegate for completing web navigation
+    //
+    func webView(webView: WKWebView, didFinishNavigation navigation: WKNavigation!) {
+        self.spinnerIndicator.stopAnimating()
+        UIApplication.sharedApplication().networkActivityIndicatorVisible = false
+        
+        NSLog("Navigation completed for:%@ URL:%@", webView.title!, webView.URL!)
+    }
 
 }

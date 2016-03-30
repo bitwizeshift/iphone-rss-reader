@@ -113,3 +113,16 @@ class RSSEntry : NSObject, NSCoding, NSCopying{
         return copy
     }
 }
+
+func == ( lhs : RSSEntry, rhs : RSSEntry ) -> Bool {
+    if let lhsLink = lhs.link{
+        if let rhsLink = rhs.link{
+            return lhsLink.absoluteString == rhsLink.absoluteString;
+        }
+    }
+    return false
+}
+
+func != ( lhs : RSSEntry, rhs : RSSEntry ) -> Bool {
+    return !(lhs==rhs)
+}

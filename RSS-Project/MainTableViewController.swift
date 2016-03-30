@@ -35,7 +35,8 @@ class MainTableViewController: UITableViewController, RSSParserDelegate, RSSFeed
         collection = RSSSharedCollection.getInstance().getCollection()
         collection!.delegate = self
         collection!.addFeedURL( NSURL(string: "http://rss.cbc.ca/lineup/topstories.xml")! )
-        collection!.addFeedURL( NSURL(string: "http://www.xul.fr/rss.xml")! )
+        //collection!.addFeedURL( NSURL(string: "http://rss.cnn.com/rss/edition.rss")! )
+
         collection!.refresh( false );
         entries = collection!.entries
         
@@ -123,7 +124,7 @@ class MainTableViewController: UITableViewController, RSSParserDelegate, RSSFeed
     override func prepareForSegue(segue: (UIStoryboardSegue!), sender: AnyObject!) {
         if (segue.identifier == "goToWebView") {
             let detailVC = segue!.destinationViewController as! WebViewController
-            detailVC.webURL = self.entries![tableView.indexPathForSelectedRow!.row].link
+            detailVC.entry = self.entries![tableView.indexPathForSelectedRow!.row]
         }
     }
     
@@ -144,6 +145,7 @@ class MainTableViewController: UITableViewController, RSSParserDelegate, RSSFeed
     func rssCompleteParsing(){
         print("Ending RSS Parsing")
         entries = collection!.entriesChronological
+        self.tableView.reloadData()
     }
     
     func rssImageBeginDownload(index: Int) {
@@ -156,6 +158,7 @@ class MainTableViewController: UITableViewController, RSSParserDelegate, RSSFeed
     func rssImageDownloadSuccess( index: Int ){
         print("got image number " + String(index) )
         indicator.disable()
+        self.tableView.reloadData()
     }
     
     //
@@ -164,12 +167,12 @@ class MainTableViewController: UITableViewController, RSSParserDelegate, RSSFeed
     func rssImageDownloadFailure( index: Int ){
         print("Unable to download image " + String(index) )
         indicator.disable()
+        self.tableView.reloadData()
     }
     
     //------------------------------------------------------------
     // MARK: - RSSFeed Delegates
     //------------------------------------------------------------
-
     
     //
     // Feed is starting to download, enable status-indicator
@@ -177,7 +180,6 @@ class MainTableViewController: UITableViewController, RSSParserDelegate, RSSFeed
     func rssFeedBeginDownload(){
         print("Start Download")
         indicator.enable()
-        
     }
     
     //
@@ -187,7 +189,6 @@ class MainTableViewController: UITableViewController, RSSParserDelegate, RSSFeed
         entries = collection!.entriesAlphabetical
         self.tableView.reloadData()
         
-    
         print("Complete download")
         indicator.disable()
         
@@ -202,6 +203,14 @@ class MainTableViewController: UITableViewController, RSSParserDelegate, RSSFeed
     }
     
     //
+    // Method called when the RSS feed downloads and updates the new feed
+    //
+    func rssFeedUpdated(){
+        entries = collection!.entriesAlphabetical
+        self.tableView.reloadData()
+    }
+    
+    //
     // Method called when an image is about to be downloaded
     //
     func rssFeedBeginImageDownload( index : Int, entry : RSSEntry? ){
@@ -213,9 +222,7 @@ class MainTableViewController: UITableViewController, RSSParserDelegate, RSSFeed
     // Method called when an image is downloaded
     //
     func rssFeedImageDownloaded( index : Int, entry : RSSEntry? ){
-        dispatch_async(dispatch_get_main_queue(), { () -> Void in
-            self.tableView.reloadData()
-        })
+        self.tableView.reloadData()
         
         print("[Success] Image \(index) downloaded")
         indicator.disable()
@@ -225,9 +232,7 @@ class MainTableViewController: UITableViewController, RSSParserDelegate, RSSFeed
     // Method called when the RSS feed fails to successfully download
     //
     func rssFeedImageNotDownloaded( index : Int, entry : RSSEntry? ){
-        dispatch_async(dispatch_get_main_queue(), { () -> Void in
-            self.tableView.reloadData()
-        })
+        self.tableView.reloadData()
         
         print("[Failure] Image \(index) failed to download")
         indicator.disable()

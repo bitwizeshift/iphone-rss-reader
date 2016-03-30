@@ -31,7 +31,7 @@ class RSSChannel : NSObject, NSCoding, NSCopying{
     var imageData   : NSData? = nil;
     
     var category    : String? = nil;
-    var lastBuild   : String? = nil;
+    var lastBuild   : NSDate? = nil;
     var skipDays    : String? = nil;
     var skipHours   : String? = nil;
     
@@ -77,9 +77,20 @@ class RSSChannel : NSObject, NSCoding, NSCopying{
         // Optionals
         imageURL  = (decoder.decodeObjectForKey(RSSChannel.IMG_URL_KEY) as? NSURL);
         category  = (decoder.decodeObjectForKey(RSSChannel.CATEGORY_KEY) as? String);
-        lastBuild = (decoder.decodeObjectForKey(RSSChannel.LASTBUILD_KEY) as? String);
+        lastBuild = (decoder.decodeObjectForKey(RSSChannel.LASTBUILD_KEY) as? NSDate);
         skipDays  = (decoder.decodeObjectForKey(RSSChannel.SKIP_DAYS_KEY) as? String);
         skipHours = (decoder.decodeObjectForKey(RSSChannel.SKIP_HOURS_KEY) as? String);
+    }
+
+    //------------------------------------------------------------------------
+    // MARK: - Data Manipulation
+    //------------------------------------------------------------------------
+
+    //
+    // Clears all entries from this Channel
+    //
+    func clearEntries(){
+        entries.removeAll()
     }
     
     //------------------------------------------------------------------------
@@ -125,4 +136,17 @@ class RSSChannel : NSObject, NSCoding, NSCopying{
         
         return copy
     } //copyWithZone
+}
+
+func == ( lhs : RSSChannel, rhs : RSSChannel ) -> Bool {
+    if let lhsLink = lhs.link{
+        if let rhsLink = rhs.link{
+            return lhsLink.absoluteString == rhsLink.absoluteString;
+        }
+    }
+    return false
+}
+
+func != ( lhs : RSSChannel, rhs : RSSChannel ) -> Bool {
+    return !(lhs==rhs)
 }

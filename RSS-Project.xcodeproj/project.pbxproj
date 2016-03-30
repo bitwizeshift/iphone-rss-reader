@@ -10,7 +10,6 @@
 		276772171C9E8F810019CD0B /* RSSFeedDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 276772161C9E8F810019CD0B /* RSSFeedDelegate.swift */; };
 		2799E5BD1C9E965100DA5C0B /* RefCountedIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2799E5BC1C9E965100DA5C0B /* RefCountedIndicator.swift */; };
 		560689701C9DD42B00293A51 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5606896F1C9DD42B00293A51 /* AppDelegate.swift */; };
-		560689721C9DD42B00293A51 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 560689711C9DD42B00293A51 /* ViewController.swift */; };
 		560689751C9DD42B00293A51 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 560689731C9DD42B00293A51 /* Main.storyboard */; };
 		560689771C9DD42B00293A51 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 560689761C9DD42B00293A51 /* Assets.xcassets */; };
 		5606897A1C9DD42B00293A51 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 560689781C9DD42B00293A51 /* LaunchScreen.storyboard */; };
@@ -38,7 +37,6 @@
 		2799E5BC1C9E965100DA5C0B /* RefCountedIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RefCountedIndicator.swift; sourceTree = "<group>"; };
 		5606896C1C9DD42A00293A51 /* RSS-Project.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "RSS-Project.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5606896F1C9DD42B00293A51 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		560689711C9DD42B00293A51 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		560689741C9DD42B00293A51 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		560689761C9DD42B00293A51 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		560689791C9DD42B00293A51 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -114,7 +112,6 @@
 				2799E5BE1C9E9EA100DA5C0B /* Util */,
 				560689851C9DE3E800293A51 /* RSS */,
 				5606896F1C9DD42B00293A51 /* AppDelegate.swift */,
-				560689711C9DD42B00293A51 /* ViewController.swift */,
 				5606898E1C9DED2000293A51 /* Settings.swift */,
 				560689731C9DD42B00293A51 /* Main.storyboard */,
 				560689761C9DD42B00293A51 /* Assets.xcassets */,
@@ -141,12 +138,12 @@
 		567B63BB1CA1FD2B00500308 /* VIew Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				ECC7A2B11C9DDF8B00999899 /* MainTableViewController.swift */,
+				ECC7A2B31C9DDF9A00999899 /* MainTableViewCell.swift */,
 				ECDFDA651CA225E80009C859 /* WebViewController.swift */,
 				ECC7A2B51C9DE08C00999899 /* ContainerViewController.swift */,
 				ECC7A2B71C9DF09900999899 /* RightTableViewController.swift */,
 				ECC7A2B91C9DF0A700999899 /* RightTableViewCell.swift */,
-				ECC7A2B11C9DDF8B00999899 /* MainTableViewController.swift */,
-				ECC7A2B31C9DDF9A00999899 /* MainTableViewCell.swift */,
 				ECC7A2AF1C9DDBB600999899 /* SideTableViewCell.swift */,
 				ECC7A2AD1C9DDBA500999899 /* SideTableViewController.swift */,
 			);
@@ -229,7 +226,6 @@
 				5606898D1C9DE42400293A51 /* RSSParserDelegate.swift in Sources */,
 				2799E5BD1C9E965100DA5C0B /* RefCountedIndicator.swift in Sources */,
 				ECDFDA661CA225E80009C859 /* WebViewController.swift in Sources */,
-				560689721C9DD42B00293A51 /* ViewController.swift in Sources */,
 				560689911C9DF5F100293A51 /* RSSCollection.swift in Sources */,
 				564319D41C9E02EF0020A542 /* RSSSharedCollection.swift in Sources */,
 				560689821C9DD4CB00293A51 /* RSSParser.swift in Sources */,

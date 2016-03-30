@@ -20,7 +20,7 @@ class RSSParser: NSObject, NSXMLParserDelegate {
     //----------------------------------------------------------------------------
     
     // List of RSS Feed data
-    var channel = RSSChannel()
+    var channel : RSSChannel? = nil
     
     // Delegate class for parsing RSS data
     var delegate : RSSParserDelegate? = nil
@@ -33,20 +33,22 @@ class RSSParser: NSObject, NSXMLParserDelegate {
     static private let CHANNEL_TAGS = ["title","description","link","image","category","lastBuildDate","skipDays","skipHours"]
     
     // List of all the channel image tags we care about
-    static private let CHANNEL_IMAGE_TAGS =
-        ["url","title","link"]
+    static private let CHANNEL_IMAGE_TAGS = ["url","title","link"]
     
     // List of all the entry tags we care about
     static private var ENTRY_TAGS = ["title","link","pubdate","author","description","category"]
+    
+    private let dateFormatter = NSDateFormatter()
     
     private var currentEntry : RSSEntry? = nil
     private var inCategory      = false
     private var currentElement  = ""
     private var foundCharacters = ""
     private var parser : NSXMLParser?;
+    private var startIndex : Int = 0;
     
     //----------------------------------------------------------------------------
-    // Constructor
+    // MARK: - Constructor
     //----------------------------------------------------------------------------
     
     //
@@ -54,28 +56,41 @@ class RSSParser: NSObject, NSXMLParserDelegate {
     //
     init(_ rssURL: NSURL) {
         super.init()
-        parser = NSXMLParser(contentsOfURL: rssURL)
-        parser!.delegate = self
+        self.parser = NSXMLParser(contentsOfURL: rssURL)
+        self.parser!.delegate = self
+        self.channel = RSSChannel()
     }
     
+    //
+    // Constructs the RSSParser class given the NSData from a file
+    //
     init( data: NSData ){
         super.init()
-        parser = NSXMLParser(data: data)
-        parser!.delegate = self
+        self.parser = NSXMLParser(data: data)
+        self.parser!.delegate = self
+        self.channel = RSSChannel()
     }
     
-    init( data: NSData, channel : RSSChannel ){
+    //
+    // Constructs the RSSParser class given the NSData and a given RSSChannel
+    //
+    init( data: NSData, channel : RSSChannel? ){
         super.init()
         self.parser = NSXMLParser(data: data)
         self.parser!.delegate = self
         self.channel = channel;
     }
     
+    //----------------------------------------------------------------------------
+    // MARK: - Parsing
+    //----------------------------------------------------------------------------
+    
     //
     // Begins parsing the document, calling the method onCompletion() after 
     // the parsing is finished
     //
     func parse( onCompletion : ()-> Void){
+        self.dateFormatter.dateFormat = "EEE, dd MMM YY H:mm:ss ZZZ"
         parser!.parse()
         onCompletion()
     }
@@ -84,7 +99,7 @@ class RSSParser: NSObject, NSXMLParserDelegate {
     // Parses the document
     //
     func parse(){
-        parser!.parse()
+        self.parse(){}
     }
     
     //----------------------------------------------------------------------------
@@ -129,7 +144,10 @@ class RSSParser: NSObject, NSXMLParserDelegate {
         
         if !foundCharacters.isEmpty{
             if inCategory && currentEntry == nil {
-            
+                if elementName == "lastBuildDate"{
+                    //channel!.lastBuild = dateFormatter.dateFromString(foundCharacters)
+                }
+                // Handle category information
             } else if currentEntry != nil {
                 let entry = currentEntry!
                 
@@ -173,7 +191,7 @@ class RSSParser: NSObject, NSXMLParserDelegate {
                     entry.category = foundCharacters.trim();
                 }
                 else if elementName == "item"{
-                    channel.entries.append(currentEntry!)
+                    channel!.entries.append(currentEntry!)
                     currentEntry = nil
                 }
                 
@@ -195,14 +213,13 @@ class RSSParser: NSObject, NSXMLParserDelegate {
     //
     internal func parserDidEndDocument(parser: NSXMLParser) {
         self.delegate?.rssCompleteParsing?()
-        var index = 0
+        var index = self.startIndex
         let imageQueue = dispatch_queue_create("Image Queue", DISPATCH_QUEUE_CONCURRENT);
         
         // Download images for channels
         
-        
         // Download all images for
-        for entry in self.channel.entries {
+        for entry in self.channel!.entries {
             let i = index
             self.delegate?.rssImageBeginDownload?(i)
             // Don't dispatch if a URL wasn't discovered

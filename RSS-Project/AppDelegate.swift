@@ -31,7 +31,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationDidEnterBackground(application: UIApplication) {
-        
         // Save RSS Collection
         RSSSharedCollection.getInstance().save( Settings.filename, rootKey: Settings.rootKey )
     }

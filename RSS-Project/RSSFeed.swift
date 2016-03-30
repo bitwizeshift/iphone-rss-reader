@@ -99,7 +99,7 @@ class RSSFeed : NSObject, NSCoding, RSSParserDelegate{
     // Getter to retrieve entries from an RSS feed
     //
     var entries : [RSSEntry] {
-        get {
+        get{
             return channel.entries
         }
     }
@@ -124,7 +124,14 @@ class RSSFeed : NSObject, NSCoding, RSSParserDelegate{
     // MARK: - RSS Feed API
     //------------------------------------------------------------------------
     
+    //
+    // Updates the channel feed
+    //
     private func update( clearCache : Bool ){
+        if( clearCache ){
+            self.channel.clearEntries()
+        }
+        
         parser = RSSParser( data: self.feedData, channel: channel )
         parser!.delegate = self
         
@@ -156,7 +163,7 @@ class RSSFeed : NSObject, NSCoding, RSSParserDelegate{
             if let d = data{
                 self.delegate?.rssFeedDownloadSuccess?()
                 self.feedData = d
-                self.update( false )
+                self.update( clearCache )
             }else{
                 self.delegate?.rssFeedDownloadFailure?()
             }
@@ -199,7 +206,9 @@ class RSSFeed : NSObject, NSCoding, RSSParserDelegate{
     // MARK: - RSSParser Delegates
     //------------------------------------------------------------------------
     
-
+    //
+    // Method called when parsing begins
+    //
     func rssBeginParsing(){
         
     }
@@ -208,10 +217,12 @@ class RSSFeed : NSObject, NSCoding, RSSParserDelegate{
     // Method called when the parsing completes
     //
     func rssCompleteParsing(){
-        channel = parser!.channel
         delegate?.rssFeedUpdated?()
     }
     
+    //
+    // Method called every time an RSS image begins downloading
+    //
     func rssImageBeginDownload( index : Int ){
         delegate?.rssFeedBeginImageDownload?( index, entry: entries[index] )
     }
@@ -229,7 +240,6 @@ class RSSFeed : NSObject, NSCoding, RSSParserDelegate{
     func rssImageDownloadFailure( index : Int ){
         delegate?.rssFeedImageNotDownloaded?( index, entry: entries[index] )
     }
-
 }
 
 //------------------------------------------------------------------------
@@ -237,9 +247,9 @@ class RSSFeed : NSObject, NSCoding, RSSParserDelegate{
 //------------------------------------------------------------------------
 
 func == ( lhs : RSSFeed, rhs : RSSFeed ) -> Bool {
-    return lhs.feedURL == rhs.feedURL
+    return lhs.feedURL.absoluteString == rhs.feedURL.absoluteString
 }
 
 func != ( lhs : RSSFeed, rhs : RSSFeed ) -> Bool {
-    return lhs.feedURL != rhs.feedURL
+    return lhs.feedURL.absoluteString != rhs.feedURL.absoluteString
 }
