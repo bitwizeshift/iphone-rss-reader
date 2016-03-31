@@ -36,27 +36,27 @@ class WebViewController: UIViewController, UITabBarDelegate, WKNavigationDelegat
     //
     // Forward navigation
     //
-    @IBAction func forwardNav(sender: AnyObject) {
-        if (self.webView.canGoForward) {
-            webView.goForward()
-        }
-    }
+//    @IBAction func forwardNav(sender: AnyObject) {
+//        if (self.webView.canGoForward) {
+//            webView.goForward()
+//        }
+//    }
    
     //
     // Refresh navigation
     //
-    @IBAction func refreshWebView(sender: AnyObject) {
-        webView.reload()
-    }
+//    @IBAction func refreshWebView(sender: AnyObject) {
+//        webView.reload()
+//    }
     
     //
     // Backward navigation
     //
-    @IBAction func backNav(sender: AnyObject) {
-        if (self.webView.canGoBack) {
-            webView.goBack()
-        }
-    }
+//    @IBAction func backNav(sender: AnyObject) {
+//        if (self.webView.canGoBack) {
+//            webView.goBack()
+//        }
+//    }
     
     //------------------------------------------------------------------------
     // MARK: - View Loading
@@ -73,6 +73,7 @@ class WebViewController: UIViewController, UITabBarDelegate, WKNavigationDelegat
         
         // Set the navigation title
         self.navigationBar.title = entry!.title
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Bookmarks, target: self, action: "addBookmark")
         
         // Set the background color to white
         self.view.backgroundColor = UIColor.whiteColor()
@@ -103,12 +104,17 @@ class WebViewController: UIViewController, UITabBarDelegate, WKNavigationDelegat
     // Create the subview layouts
     //
     override func viewWillLayoutSubviews() {
-        let BOTTOM_MARGIN : CGFloat = self.bottomBar.frame.size.height;
+//        let BOTTOM_MARGIN : CGFloat = self.bottomBar.frame.size.height;
         let TOP_MARGIN    : CGFloat = UIApplication.sharedApplication().statusBarFrame.size.height
-        self.webView.frame = CGRectMake(0, TOP_MARGIN, self.view.frame.size.width, self.view.frame.size.height - BOTTOM_MARGIN - TOP_MARGIN)
+        self.webView.frame = CGRectMake(0, TOP_MARGIN, self.view.frame.size.width, self.view.frame.size.height - 100 - TOP_MARGIN)
         
     }
-    
+    //
+    // Add story to bookmarks
+    //
+    func addBookmark(){
+        print("Bookmark Added")
+    }
     //------------------------------------------------------------------------
     // MARK: - WKNavigationDelegate
     //------------------------------------------------------------------------
