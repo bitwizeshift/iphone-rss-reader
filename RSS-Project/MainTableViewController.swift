@@ -303,34 +303,38 @@ class MainTableViewController: UITableViewController, RSSParserDelegate, RSSFeed
 
 extension ContainerViewController: UIGestureRecognizerDelegate {
     // MARK: Gesture recognizer
-    
     func handlePanGesture(recognizer: UIPanGestureRecognizer) {
         let gestureIsDraggingFromLeftToRight = (recognizer.velocityInView(view).x > 0)
-        
         switch(recognizer.state) {
         case .Began:
             if (currentState == .BothCollapsed) {
                 
                 if (gestureIsDraggingFromLeftToRight) {
                     addLeftPanelViewController()
-                } else {
-                    addRightPanelViewController()
                 }
+//                else {
+//                    addRightPanelViewController()
+//                }
                 
                 showShadowForCenterViewController(true)
             }
         case .Changed:
-            recognizer.view!.center.x = recognizer.view!.center.x + recognizer.translationInView(view).x
-            recognizer.setTranslation(CGPointZero, inView: view)
+            if ((gestureIsDraggingFromLeftToRight || currentState == .LeftPanelExpanded) && currentState != .RightPanelExpanded) {
+                recognizer.view!.center.x = recognizer.view!.center.x + recognizer.translationInView(view).x
+                recognizer.setTranslation(CGPointZero, inView: view)
+            }else{
+                
+            }
         case .Ended:
             if (sideTableViewController != nil) {
                 // animate the side panel open or closed based on whether the view has moved more or less than halfway
                 let hasMovedGreaterThanHalfway = recognizer.view!.center.x > view.bounds.size.width
                 animateLeftPanel(hasMovedGreaterThanHalfway)
-            } else if (rightTableViewController != nil) {
-                let hasMovedGreaterThanHalfway = recognizer.view!.center.x < 0
-                animateRightPanel(hasMovedGreaterThanHalfway)
             }
+//            else if (rightTableViewController != nil) {
+//                let hasMovedGreaterThanHalfway = recognizer.view!.center.x < 0
+//                animateRightPanel(hasMovedGreaterThanHalfway)
+//            }
         default:
             break
         }
