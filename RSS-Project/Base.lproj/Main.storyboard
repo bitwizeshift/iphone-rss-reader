@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9532" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="bgr-J8-iu3">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="bgr-J8-iu3">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
@@ -55,7 +55,7 @@
                                 <rect key="frame" x="0.0" y="148" width="600" height="80"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="DFg-Ty-tiP" id="3rx-0V-nlF">
-                                    <rect key="frame" x="0.0" y="0.0" width="600" height="79"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="79.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="space-invader-small" translatesAutoresizingMaskIntoConstraints="NO" id="qpV-gN-Sjf">
@@ -73,7 +73,7 @@
                                                 </mask>
                                             </variation>
                                         </imageView>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6Tf-j2-saO">
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6Tf-j2-saO">
                                             <rect key="frame" x="78" y="28" width="42" height="20"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -188,7 +188,7 @@
                                     <outlet property="storyCategory" destination="EvX-ce-VqK" id="7MM-O0-AEi"/>
                                     <outlet property="storyImg" destination="Ypw-hB-gWy" id="FaC-v4-76H"/>
                                     <outlet property="storyTitle" destination="OE3-m8-iRe" id="6kD-8Y-Jh9"/>
-                                    <segue destination="fOR-2l-gof" kind="show" identifier="goToWebView" id="FXE-0b-Nhs"/>
+                                    <segue destination="fOR-2l-gof" kind="showDetail" identifier="goToWebView" action="showViewController:sender:" id="FXE-0b-Nhs"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -216,7 +216,7 @@
             </objects>
             <point key="canvasLocation" x="801" y="920"/>
         </scene>
-        <!--Web Title-->
+        <!--Title-->
         <scene sceneID="NHC-dB-3io">
             <objects>
                 <viewController id="fOR-2l-gof" customClass="WebViewController" customModule="RSS_Project" customModuleProvider="target" sceneMemberID="viewController">
@@ -266,6 +266,14 @@
                                     <constraint firstAttribute="height" constant="50" id="p1R-HG-CuP"/>
                                 </constraints>
                             </view>
+                            <navigationBar contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NpM-3K-x4o">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
+                                <items>
+                                    <navigationItem id="0G9-OI-XmY">
+                                        <barButtonItem key="rightBarButtonItem" title="Item" id="Zm7-Ly-ZcE"/>
+                                    </navigationItem>
+                                </items>
+                            </navigationBar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -274,10 +282,9 @@
                             <constraint firstItem="jm6-lm-uZP" firstAttribute="top" secondItem="llB-AE-BTl" secondAttribute="bottom" id="hEx-Q0-iSJ"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Web Title" id="HCQ-v5-fZa"/>
+                    <navigationItem key="navigationItem" title="Title" id="wbP-66-SgI"/>
                     <connections>
                         <outlet property="bottomBar" destination="llB-AE-BTl" id="J6R-fM-nhv"/>
-                        <outlet property="navigationBar" destination="HCQ-v5-fZa" id="zmr-Aj-6ns"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="giC-82-pPC" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -321,7 +328,7 @@
                                 <rect key="frame" x="0.0" y="148" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Kjd-3W-aQv" id="xOD-5k-GMN">
-                                    <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
