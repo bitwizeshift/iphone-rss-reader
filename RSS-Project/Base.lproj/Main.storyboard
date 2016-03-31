@@ -216,7 +216,7 @@
             </objects>
             <point key="canvasLocation" x="801" y="920"/>
         </scene>
-        <!--Title-->
+        <!--Web Title-->
         <scene sceneID="NHC-dB-3io">
             <objects>
                 <viewController id="fOR-2l-gof" customClass="WebViewController" customModule="RSS_Project" customModuleProvider="target" sceneMemberID="viewController">
@@ -227,64 +227,19 @@
                     <view key="view" contentMode="scaleToFill" id="5Dm-Zu-zTN">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="llB-AE-BTl">
-                                <rect key="frame" x="0.0" y="550" width="600" height="50"/>
-                                <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UYM-tx-dUd">
-                                        <rect key="frame" x="539" y="5" width="35" height="35"/>
-                                        <state key="normal" image="right-icon-small"/>
-                                        <connections>
-                                            <action selector="forwardNav:" destination="fOR-2l-gof" eventType="touchUpInside" id="6ed-k3-jMx"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4Xz-Gh-l9r">
-                                        <rect key="frame" x="257" y="3" width="87" height="33"/>
-                                        <state key="normal" title="Refresh">
-                                            <color key="titleColor" red="0.21040482954545459" green="0.21040482954545459" blue="0.21040482954545459" alpha="1" colorSpace="calibratedRGB"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="refreshWebView:" destination="fOR-2l-gof" eventType="touchUpInside" id="e4Y-Zu-ceL"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cJR-ft-G7U">
-                                        <rect key="frame" x="20" y="7" width="35" height="35"/>
-                                        <state key="normal" image="left-icon-small"/>
-                                        <connections>
-                                            <action selector="backNav:" destination="fOR-2l-gof" eventType="touchUpInside" id="ppT-eQ-eGz"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
-                                <color key="backgroundColor" red="0.8049636994949495" green="0.8049636994949495" blue="0.8049636994949495" alpha="1" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstItem="cJR-ft-G7U" firstAttribute="leading" secondItem="llB-AE-BTl" secondAttribute="leading" constant="20" id="CpT-ql-q48"/>
-                                    <constraint firstItem="4Xz-Gh-l9r" firstAttribute="centerY" secondItem="llB-AE-BTl" secondAttribute="centerY" id="ERU-eh-9xV"/>
-                                    <constraint firstItem="cJR-ft-G7U" firstAttribute="centerY" secondItem="llB-AE-BTl" secondAttribute="centerY" id="Nq7-TI-lEr"/>
-                                    <constraint firstItem="UYM-tx-dUd" firstAttribute="centerY" secondItem="llB-AE-BTl" secondAttribute="centerY" id="efF-OR-6CG"/>
-                                    <constraint firstAttribute="trailing" secondItem="UYM-tx-dUd" secondAttribute="trailing" constant="20" id="lD6-mE-vt4"/>
-                                    <constraint firstItem="4Xz-Gh-l9r" firstAttribute="centerX" secondItem="llB-AE-BTl" secondAttribute="centerX" id="mdZ-5C-Ppm"/>
-                                    <constraint firstAttribute="height" constant="50" id="p1R-HG-CuP"/>
-                                </constraints>
-                            </view>
-                            <navigationBar contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NpM-3K-x4o">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
-                                <items>
-                                    <navigationItem id="0G9-OI-XmY">
-                                        <barButtonItem key="rightBarButtonItem" title="Item" id="Zm7-Ly-ZcE"/>
-                                    </navigationItem>
-                                </items>
-                            </navigationBar>
-                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstAttribute="trailingMargin" secondItem="llB-AE-BTl" secondAttribute="trailing" constant="-20" id="CG5-es-2Gu"/>
-                            <constraint firstItem="llB-AE-BTl" firstAttribute="leading" secondItem="5Dm-Zu-zTN" secondAttribute="leadingMargin" constant="-20" id="PRM-Mw-hIS"/>
-                            <constraint firstItem="jm6-lm-uZP" firstAttribute="top" secondItem="llB-AE-BTl" secondAttribute="bottom" id="hEx-Q0-iSJ"/>
-                        </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Title" id="wbP-66-SgI"/>
+                    <toolbarItems>
+                        <barButtonItem image="left-icon-small" id="3nh-4z-z3Y"/>
+                        <barButtonItem width="247" style="plain" systemItem="fixedSpace" id="4YX-jj-7bC"/>
+                        <barButtonItem systemItem="refresh" id="enI-ch-hn6"/>
+                        <barButtonItem width="223" style="plain" systemItem="fixedSpace" id="V5R-Nh-KHD"/>
+                        <barButtonItem image="right-icon-small" id="lNY-Ja-uBx"/>
+                    </toolbarItems>
+                    <navigationItem key="navigationItem" title="Web Title" id="HCQ-v5-fZa"/>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="bottomBar" destination="llB-AE-BTl" id="J6R-fM-nhv"/>
+                        <outlet property="navigationBar" destination="HCQ-v5-fZa" id="zmr-Aj-6ns"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="giC-82-pPC" userLabel="First Responder" sceneMemberID="firstResponder"/>
