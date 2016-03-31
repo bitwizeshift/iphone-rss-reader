@@ -118,6 +118,7 @@ class RSSParser: NSObject, NSXMLParserDelegate {
         if( elementName == "channel"){
             inChannel = true
         }else if( elementName == "item"){
+            print("item: \(channel!.title)")
             currentEntry = RSSEntry()
         }
         
@@ -146,79 +147,70 @@ class RSSParser: NSObject, NSXMLParserDelegate {
     //
     internal func parser(parser: NSXMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
         
-        if !foundCharacters.isEmpty{
-            if inChannel && currentEntry == nil {
-                if elementName == "lastBuildDate"{
-                    //channel!.lastBuild = dateFormatter.dateFromString(foundCharacters)
-                }
-                else if elementName == "title"{
-                    channel!.title = foundCharacters.trim()
-                }
-                // Handle category information
-            } else if let entry = currentEntry {
-                print("\(elementName) - \(channel!.title)")
+        if inChannel && currentEntry == nil {
+            if elementName == "lastBuildDate"{
+                //channel!.lastBuild = dateFormatter.dateFromString(foundCharacters)
+            }
+            else if elementName == "title"{
+                channel!.title = foundCharacters.trim()
+            }
+            // Handle category information
+        } else if let entry = currentEntry {
+            print("\(elementName) - \(channel!.title)")
                     
-                // Check if the closed tags are of interest
-                if elementName == "link"{
-                    print("link: \(channel!.title)")
-                    entry.link = NSURL( string: foundCharacters.trim())
-                }
-                else if elementName == "pubDate"{
-                    print("pubDate: \(channel!.title)")
-                    entry.pubDate = foundCharacters.trim();
-                }
-                else if elementName == "title"{
-                    print("title: \(channel!.title)")
-                    entry.title = foundCharacters.trim();
-                }
-                else if elementName == "author"{
-                    print("author: \(channel!.title)")
-                    entry.author = foundCharacters.trim();
-                }
-                else if elementName == "description"{
-                    print("description: \(channel!.title)")
-                    let quoteSet = NSCharacterSet(charactersInString: "\"'")
-                    let IMG    = "<img"
-                    let SRC    = "src="
-                    
-                    var source: NSString?
-                    
-                    // TODO: Update me
-                    
-                    let theScanner = NSScanner(string: foundCharacters)
-                    theScanner.scanUpToString(IMG, intoString: nil);
-                    theScanner.scanString(IMG, intoString: nil)
-                    theScanner.scanUpToString(SRC, intoString: nil);
-                    theScanner.scanString(SRC, intoString: nil)
-                    theScanner.scanUpToCharactersFromSet( quoteSet, intoString: nil ) // Go to starting quote
-                    theScanner.scanCharactersFromSet( quoteSet, intoString: nil )
-                    theScanner.scanUpToCharactersFromSet( quoteSet, intoString: &source )
-                    
-                    if let urlString = source as? String{
-                        entry.imageURL = NSURL( string: urlString );
-                    }else{
-                        entry.entryDescription = foundCharacters.stringByReplacingOccurrencesOfString("<[^>]+>", withString: "", options: .RegularExpressionSearch, range: nil).trim()
-                    }
-                }
-                else if elementName == "category"{
-                    print("category: \(channel!.title)")
-                    entry.category = foundCharacters.trim();
-                }
-                else if elementName == "item"{
-                    print("item: \(channel!.title)")
-                    // If the entry can be added
-                    if channel!.addEntry(currentEntry!){
-                        // If there is an image URL to download
-                        if let _ = currentEntry?.imageURL{
-                            imageIndices.append(channel!.entries.count-1)
-                        }
-                    }
-                    
-                    currentEntry = nil
+            // Check if the closed tags are of interest
+            if elementName == "link"{
+                entry.link = NSURL( string: foundCharacters.trim())
+            }
+            else if elementName == "pubDate"{
+                entry.pubDate = foundCharacters.trim();
+            }
+            else if elementName == "title"{
+                entry.title = foundCharacters.trim();
+            }
+            else if elementName == "author"{
+                entry.author = foundCharacters.trim();
+            }
+            else if elementName == "description"{
+                let quoteSet = NSCharacterSet(charactersInString: "\"'")
+                let IMG    = "<img"
+                let SRC    = "src="
+                
+                var source: NSString?
+                
+                // TODO: Update me
+                
+                let theScanner = NSScanner(string: foundCharacters)
+                theScanner.scanUpToString(IMG, intoString: nil);
+                theScanner.scanString(IMG, intoString: nil)
+                theScanner.scanUpToString(SRC, intoString: nil);
+                theScanner.scanString(SRC, intoString: nil)
+                theScanner.scanUpToCharactersFromSet( quoteSet, intoString: nil ) // Go to starting quote
+                theScanner.scanCharactersFromSet( quoteSet, intoString: nil )
+                theScanner.scanUpToCharactersFromSet( quoteSet, intoString: &source )
+                
+                if let urlString = source as? String{
+                    entry.imageURL = NSURL( string: urlString );
+                }else{
+                    entry.entryDescription = foundCharacters.stringByReplacingOccurrencesOfString("<[^>+>", withString: "", options: .RegularExpressionSearch, range: nil).trim()
                 }
             }
+            else if elementName == "category"{
+                entry.category = foundCharacters.trim();
+            }
+            else if elementName == "item"{
+                // If the entry can be added
+                if channel!.addEntry(currentEntry!){
+                    // If there is an image URL to download
+                    if let _ = currentEntry?.imageURL{
+                        imageIndices.append(channel!.entries.count-1)
+                    }
+                }
+                
+                currentEntry = nil
+            }
         }
-        
+    
         // Channel is closed
         if( elementName == "channel" ){
             self.inChannel = false;
@@ -227,7 +219,7 @@ class RSSParser: NSObject, NSXMLParserDelegate {
         // Reset found characters
         foundCharacters = ""
     }
-    
+
     //
     // Called when the parser begins parsing the document
     //

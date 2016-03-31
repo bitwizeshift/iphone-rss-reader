@@ -57,7 +57,6 @@ class MainTableViewController: UITableViewController, RSSParserDelegate, RSSFeed
     override func viewDidLoad() {
         super.viewDidLoad()
         collection = RSSSharedCollection.getInstance().getCollection()
-        collection!.clear()
         collection!.delegate = self
         collection!.addFeedURL( NSURL(string: "http://rss.cbc.ca/lineup/topstories.xml")! )
         collection!.addFeedURL( NSURL(string: "http://www.nbcnewyork.com/news/top-stories/?rss=y&embedThumb=y&summary=y")! )
@@ -125,7 +124,7 @@ class MainTableViewController: UITableViewController, RSSParserDelegate, RSSFeed
     // Gets the cell for the table
     //
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let entry = entries![indexPath.row]
+        let entry = collection!.feeds[indexPath.section].entries[indexPath.row] 
         let cell = tableView.dequeueReusableCellWithIdentifier("MainFeedCell", forIndexPath: indexPath) as! MainTableViewCell
         if let data = entry.imageData {
             cell.storyImg.image  = UIImage( data: data )
@@ -201,6 +200,7 @@ class MainTableViewController: UITableViewController, RSSParserDelegate, RSSFeed
         if (segue.identifier == "goToWebView") {
             let detailVC = segue!.destinationViewController as! WebViewController
             detailVC.entry = self.entries![tableView.indexPathForSelectedRow!.row]
+            detailVC.collection = collection
         }
     }
     
