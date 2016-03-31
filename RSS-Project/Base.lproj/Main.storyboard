@@ -132,8 +132,8 @@
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="80"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="space-invader-small" translatesAutoresizingMaskIntoConstraints="NO" id="Ypw-hB-gWy">
-                                            <rect key="frame" x="0.0" y="0.0" width="68" height="70"/>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="space-invader-small" translatesAutoresizingMaskIntoConstraints="NO" id="Ypw-hB-gWy">
+                                            <rect key="frame" x="10" y="5" width="70" height="70"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="70" id="J5s-x0-cCI"/>
                                                 <constraint firstAttribute="height" constant="70" id="Lbv-0r-SJ1"/>
@@ -145,37 +145,37 @@
                                                 </mask>
                                             </variation>
                                         </imageView>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OE3-m8-iRe">
-                                            <rect key="frame" x="88" y="25" width="402" height="20"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OE3-m8-iRe">
+                                            <rect key="frame" x="100" y="20" width="390" height="18"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Category:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hg8-Ly-QT3">
-                                            <rect key="frame" x="88" y="48" width="59" height="21"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Category:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hg8-Ly-QT3">
+                                            <rect key="frame" x="100" y="47" width="56" height="15"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EvX-ce-VqK">
-                                            <rect key="frame" x="155" y="48" width="42" height="21"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EvX-ce-VqK">
+                                            <rect key="frame" x="159" y="47" width="31" height="15"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstAttribute="trailingMargin" secondItem="OE3-m8-iRe" secondAttribute="trailing" constant="20" id="4V5-1f-KtZ"/>
-                                        <constraint firstItem="OE3-m8-iRe" firstAttribute="centerY" secondItem="pGD-8M-R1l" secondAttribute="centerY" id="5R8-V8-JfZ"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="OE3-m8-iRe" secondAttribute="trailing" constant="102" id="4V5-1f-KtZ"/>
+                                        <constraint firstItem="OE3-m8-iRe" firstAttribute="centerY" secondItem="pGD-8M-R1l" secondAttribute="centerY" constant="-11" id="5R8-V8-JfZ"/>
                                         <constraint firstItem="Ypw-hB-gWy" firstAttribute="top" secondItem="pGD-8M-R1l" secondAttribute="topMargin" constant="-8" id="7fp-L0-l3z"/>
                                         <constraint firstItem="EvX-ce-VqK" firstAttribute="leading" secondItem="hg8-Ly-QT3" secondAttribute="trailing" constant="3" id="8jS-Di-rok"/>
                                         <constraint firstItem="Ypw-hB-gWy" firstAttribute="centerY" secondItem="pGD-8M-R1l" secondAttribute="centerY" id="C2z-q0-EN4"/>
                                         <constraint firstItem="Ypw-hB-gWy" firstAttribute="leading" secondItem="pGD-8M-R1l" secondAttribute="leadingMargin" constant="2" id="MFQ-N5-qxv"/>
                                         <constraint firstAttribute="bottomMargin" secondItem="Ypw-hB-gWy" secondAttribute="bottom" constant="-8" id="OUb-Jk-eon"/>
                                         <constraint firstItem="OE3-m8-iRe" firstAttribute="leading" secondItem="Ypw-hB-gWy" secondAttribute="trailing" constant="20" id="Wf6-gk-iOD"/>
-                                        <constraint firstItem="hg8-Ly-QT3" firstAttribute="top" secondItem="OE3-m8-iRe" secondAttribute="bottom" constant="3" id="XXl-gP-xGz"/>
+                                        <constraint firstItem="hg8-Ly-QT3" firstAttribute="top" secondItem="OE3-m8-iRe" secondAttribute="bottom" constant="9" id="XXl-gP-xGz"/>
                                         <constraint firstItem="hg8-Ly-QT3" firstAttribute="leading" secondItem="Ypw-hB-gWy" secondAttribute="trailing" constant="20" id="phn-nd-qSA"/>
-                                        <constraint firstItem="EvX-ce-VqK" firstAttribute="top" secondItem="OE3-m8-iRe" secondAttribute="bottom" constant="3" id="y12-UA-eOn"/>
+                                        <constraint firstItem="EvX-ce-VqK" firstAttribute="top" secondItem="OE3-m8-iRe" secondAttribute="bottom" constant="9" id="y12-UA-eOn"/>
                                     </constraints>
                                     <variation key="default">
                                         <mask key="constraints">

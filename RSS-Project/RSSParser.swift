@@ -41,11 +41,12 @@ class RSSParser: NSObject, NSXMLParserDelegate {
     private let dateFormatter = NSDateFormatter()
     
     private var currentEntry : RSSEntry? = nil
-    private var inCategory      = false
+    private var inChannel      = false
     private var currentElement  = ""
     private var foundCharacters = ""
     private var parser : NSXMLParser?;
-    private var startIndex : Int = 0;
+    
+    private var imageIndices : [Int] = [];
     
     //----------------------------------------------------------------------------
     // MARK: - Constructor
@@ -56,6 +57,7 @@ class RSSParser: NSObject, NSXMLParserDelegate {
     //
     init(_ rssURL: NSURL) {
         super.init()
+
         self.parser = NSXMLParser(contentsOfURL: rssURL)
         self.parser!.delegate = self
         self.channel = RSSChannel()
@@ -66,6 +68,7 @@ class RSSParser: NSObject, NSXMLParserDelegate {
     //
     init( data: NSData ){
         super.init()
+
         self.parser = NSXMLParser(data: data)
         self.parser!.delegate = self
         self.channel = RSSChannel()
@@ -76,6 +79,7 @@ class RSSParser: NSObject, NSXMLParserDelegate {
     //
     init( data: NSData, channel : RSSChannel? ){
         super.init()
+
         self.parser = NSXMLParser(data: data)
         self.parser!.delegate = self
         self.channel = channel;
@@ -111,8 +115,8 @@ class RSSParser: NSObject, NSXMLParserDelegate {
     //
     internal func parser(parser: NSXMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String]){
         // Record only if a category or an item
-        if( elementName == "category"){
-            inCategory = true
+        if( elementName == "channel"){
+            inChannel = true
         }else if( elementName == "item"){
             currentEntry = RSSEntry()
         }
@@ -126,13 +130,13 @@ class RSSParser: NSObject, NSXMLParserDelegate {
     internal func parser(parser: NSXMLParser, foundCharacters string: String) {
         // Only record element characters if there is an open RSSEntry
         
-        if inCategory && currentEntry == nil {
+        if inChannel && currentEntry == nil {
             if (RSSParser.CHANNEL_TAGS.contains(currentElement)){
-                foundCharacters += string
+                foundCharacters += string.unescapedHTMLString
             }
         } else if currentEntry != nil {
             if (RSSParser.ENTRY_TAGS.contains(currentElement)){
-                foundCharacters += string
+                foundCharacters += string.unescapedHTMLString
             }
         }
     }
@@ -143,34 +147,42 @@ class RSSParser: NSObject, NSXMLParserDelegate {
     internal func parser(parser: NSXMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
         
         if !foundCharacters.isEmpty{
-            if inCategory && currentEntry == nil {
+            if inChannel && currentEntry == nil {
                 if elementName == "lastBuildDate"{
                     //channel!.lastBuild = dateFormatter.dateFromString(foundCharacters)
                 }
+                else if elementName == "title"{
+                    channel!.title = foundCharacters.trim()
+                }
                 // Handle category information
-            } else if currentEntry != nil {
-                let entry = currentEntry!
+            } else if let entry = currentEntry {
                 
                 // Check if the closed tags are of interest
                 if elementName == "link"{
-                    entry.link = NSURL( string: foundCharacters.trim() )
+                    print("link: \(channel!.title)")
+                    entry.link = NSURL( string: foundCharacters.trim())
                 }
                 else if elementName == "pubDate"{
+                    print("pubDate: \(channel!.title)")
                     entry.pubDate = foundCharacters.trim();
                 }
                 else if elementName == "title"{
+                    print("title: \(channel!.title)")
                     entry.title = foundCharacters.trim();
                 }
                 else if elementName == "author"{
+                    print("author: \(channel!.title)")
                     entry.author = foundCharacters.trim();
                 }
                 else if elementName == "description"{
-                    
+                    print("description: \(channel!.title)")
                     let quoteSet = NSCharacterSet(charactersInString: "\"'")
                     let IMG    = "<img"
                     let SRC    = "src="
                     
                     var source: NSString?
+                    
+                    // TODO: Update me
                     
                     let theScanner = NSScanner(string: foundCharacters)
                     theScanner.scanUpToString(IMG, intoString: nil);
@@ -188,17 +200,31 @@ class RSSParser: NSObject, NSXMLParserDelegate {
                     }
                 }
                 else if elementName == "category"{
+                    print("category: \(channel!.title)")
                     entry.category = foundCharacters.trim();
                 }
                 else if elementName == "item"{
-                    channel!.entries.append(currentEntry!)
+                    print("item: \(channel!.title)")
+                    // If the entry can be added
+                    if channel!.addEntry(currentEntry!){
+                        // If there is an image URL to download
+                        if let _ = currentEntry?.imageURL{
+                            imageIndices.append(channel!.entries.count-1)
+                        }
+                    }
+                    
                     currentEntry = nil
                 }
-                
-                // Reset found characters
-                foundCharacters = ""
             }
         }
+        
+        // Channel is closed
+        if( elementName == "channel" ){
+            self.inChannel = false;
+        }
+        
+        // Reset found characters
+        foundCharacters = ""
     }
     
     //
@@ -213,14 +239,11 @@ class RSSParser: NSObject, NSXMLParserDelegate {
     //
     internal func parserDidEndDocument(parser: NSXMLParser) {
         self.delegate?.rssCompleteParsing?()
-        var index = self.startIndex
         let imageQueue = dispatch_queue_create("Image Queue", DISPATCH_QUEUE_CONCURRENT);
         
-        // Download images for channels
-        
-        // Download all images for
-        for entry in self.channel!.entries {
-            let i = index
+        // Download all images for feeds
+        for i in imageIndices{
+            let entry = self.channel!.entries[i];
             self.delegate?.rssImageBeginDownload?(i)
             // Don't dispatch if a URL wasn't discovered
             if let url = entry.imageURL{
@@ -241,12 +264,10 @@ class RSSParser: NSObject, NSXMLParserDelegate {
                     }
                 }) //dispatch_asyn
             } else{
-                let i = index
                 dispatch_async(dispatch_get_main_queue(), {
                     self.delegate?.rssImageDownloadFailure?(i)
                 }); //dispatch_asyn
             } // if let url
-            index++
         }
     }
     

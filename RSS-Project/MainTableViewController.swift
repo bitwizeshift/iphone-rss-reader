@@ -15,27 +15,51 @@ protocol MainTableViewControllerDelegate {
     optional func collapseSidePanels()
 }
 class MainTableViewController: UITableViewController, RSSParserDelegate, RSSFeedDelegate {
+    
+    //------------------------------------------------------------------------
+    // MARK: - Public Attributes
+    //------------------------------------------------------------------------
 
-    var delegate: MainTableViewControllerDelegate?
-    var indicator = RefCountedIndicator()
+    var delegate : MainTableViewControllerDelegate?
 
-    var collection : RSSCollection? = nil
-    var entries    : [RSSEntry]?    = nil
+    //------------------------------------------------------------------------
+    // MARK: - Private Attributes
+    //------------------------------------------------------------------------
 
+    private var indicator = RefCountedIndicator()
+
+    private var collection : RSSCollection? = nil
+    private var entries    : [RSSEntry]?    = nil
+    
+    //------------------------------------------------------------------------
+    // MARK: - Actions
+    //------------------------------------------------------------------------
+    
+    //
+    // Action for opening the right menu
+    //
     @IBAction func openRightMenu(sender: AnyObject) {
         delegate?.toggleRightPanel?()
     }
+    
+    //
+    // Action for opening the left menu
+    //
     @IBAction func openSideMenu(sender: AnyObject) {
         delegate?.toggleLeftPanel?()
         
     }
-        
+    
+    //------------------------------------------------------------------------
+    // MARK: - View Loading
+    //------------------------------------------------------------------------
+
     override func viewDidLoad() {
         super.viewDidLoad()
         collection = RSSSharedCollection.getInstance().getCollection()
         collection!.delegate = self
-        collection!.addFeedURL( NSURL(string: "http://rss.cbc.ca/lineup/topstories.xml")! )
-        //collection!.addFeedURL( NSURL(string: "http://rss.cnn.com/rss/edition.rss")! )
+        //collection!.addFeedURL( NSURL(string: "http://rss.cbc.ca/lineup/topstories.xml")! )
+        collection!.addFeedURL( NSURL(string: "http://rss.cnn.com/rss/edition.rss")! )
 
         collection!.refresh( false );
         entries = collection!.entries
@@ -55,23 +79,49 @@ class MainTableViewController: UITableViewController, RSSParserDelegate, RSSFeed
         // Dispose of any resources that can be recreated.
     }
 
-    // MARK: - Table view data source
+    //------------------------------------------------------------------------
+    // MARK: - Table View Data Source
+    //------------------------------------------------------------------------
 
+    //
+    // Section indices for the table view
+    //
+    override func sectionIndexTitlesForTableView(tableView: UITableView) -> [String]? {
+        var keys = [String]()
+        for feed in collection!.feeds{
+            if !feed.channelTitle.isEmpty && !keys.contains( feed.channelTitle[0].uppercaseString ){
+                keys.append( feed.channelTitle[0].uppercaseString )
+            }
+        }
+        return keys
+    }
+
+    //
+    // The number of sections in this Table
+    //
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 1
+        return collection!.feeds.count
     }
 
+    //
+    // The title for the individual section
+    //
+    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return collection!.feeds[section].channelTitle
+    }
+
+    //
+    // The number of rows in the section
+    //
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        if let entries = entries{
-            return entries.count
-        }else{
-            return 0
-        }
+        return collection!.feeds[section].entries.count
     }
-
     
+    //
+    // Gets the cell for the table
+    //
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let entry = entries![indexPath.row]
         let cell = tableView.dequeueReusableCellWithIdentifier("MainFeedCell", forIndexPath: indexPath) as! MainTableViewCell
@@ -85,42 +135,36 @@ class MainTableViewController: UITableViewController, RSSParserDelegate, RSSFeed
         return cell
     }
 
-    /*
+    
+    //
     // Override to support conditional editing of the table view.
+    //
     override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
         // Return false if you do not want the specified item to be editable.
         return true
     }
-    */
-
-    /*
+    
+    //
     // Override to support editing the table view.
+    //
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if editingStyle == .Delete {
             // Delete the row from the data source
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+            //tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+            
+            // TODO: Add to block list
         } else if editingStyle == .Insert {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
+        }
     }
-    */
 
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(tableView: UITableView, moveRowAtIndexPath fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
+    //------------------------------------------------------------
     // MARK: - Navigation
+    //------------------------------------------------------------
+    
+    //
+    // Pass the web-view entry
+    //
     override func prepareForSegue(segue: (UIStoryboardSegue!), sender: AnyObject!) {
         if (segue.identifier == "goToWebView") {
             let detailVC = segue!.destinationViewController as! WebViewController
@@ -206,7 +250,7 @@ class MainTableViewController: UITableViewController, RSSParserDelegate, RSSFeed
     // Method called when the RSS feed downloads and updates the new feed
     //
     func rssFeedUpdated(){
-        entries = collection!.entriesAlphabetical
+        entries = collection!.entriesChronological
         self.tableView.reloadData()
     }
     

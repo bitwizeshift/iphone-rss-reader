@@ -17,6 +17,12 @@ import Foundation
 class RSSChannel : NSObject, NSCoding, NSCopying{
     
     //------------------------------------------------------------------------
+    // MARK: - Private Attributes
+    //------------------------------------------------------------------------
+    
+    private var rssEntries : [RSSEntry] = [RSSEntry]()
+
+    //------------------------------------------------------------------------
     // MARK: - Public Attributes
     //------------------------------------------------------------------------
     
@@ -24,7 +30,6 @@ class RSSChannel : NSObject, NSCoding, NSCopying{
     var title              : String = "";
     var channelDescription : String = "";
     var link               : NSURL? = nil;
-    var entries            : [RSSEntry] = [RSSEntry]()
     
     // Optional Elements
     var imageURL    : NSURL?  = nil;
@@ -72,7 +77,7 @@ class RSSChannel : NSObject, NSCoding, NSCopying{
         // Required
         title   = (decoder.decodeObjectForKey(RSSChannel.TITLE_KEY) as! String)
         link    = (decoder.decodeObjectForKey(RSSChannel.LINK_KEY) as? NSURL)
-        entries = (decoder.decodeObjectForKey(RSSChannel.ENTRIES_KEY) as! [RSSEntry])
+        rssEntries = (decoder.decodeObjectForKey(RSSChannel.ENTRIES_KEY) as! [RSSEntry])
         
         // Optionals
         imageURL  = (decoder.decodeObjectForKey(RSSChannel.IMG_URL_KEY) as? NSURL);
@@ -83,14 +88,44 @@ class RSSChannel : NSObject, NSCoding, NSCopying{
     }
 
     //------------------------------------------------------------------------
-    // MARK: - Data Manipulation
+    // MARK: - Public Properties
     //------------------------------------------------------------------------
 
+    //
+    // Returns the entries as a read-only list
+    //
+    var entries : [RSSEntry]{
+        get{
+            return rssEntries;
+        }
+    }
+
+    //------------------------------------------------------------------------
+    // MARK: - Data Manipulation
+    //------------------------------------------------------------------------
+    
     //
     // Clears all entries from this Channel
     //
     func clearEntries(){
-        entries.removeAll()
+        rssEntries.removeAll()
+    }
+    
+    //
+    // Adds entries by only appending new entries
+    //
+    func addEntry( entry : RSSEntry ) -> Bool{
+        for e in rssEntries {
+            if(e == entry){
+                return false
+            }
+        }
+        rssEntries.append(entry);
+        return true;
+    }
+    
+    func removeEntry( entry : RSSEntry ){
+        
     }
     
     //------------------------------------------------------------------------
@@ -125,7 +160,7 @@ class RSSChannel : NSObject, NSCoding, NSCopying{
         // required
         copy.title   = self.title
         copy.link    = self.link
-        copy.entries = self.entries
+        copy.rssEntries = self.rssEntries
         
         // Optionals
         copy.imageURL  = self.imageURL
