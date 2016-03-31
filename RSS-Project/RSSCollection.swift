@@ -198,7 +198,7 @@ class RSSCollection : NSObject, NSCoding {
     // Is this RSS entry a favorite entry?
     //
     func isFavorite( entry : RSSEntry ) -> Bool {
-        for e in entriesChronological{
+        for e in rssFavorites{
             if e == entry{
                 return true
             }

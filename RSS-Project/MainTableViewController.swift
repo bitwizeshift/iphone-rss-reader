@@ -57,6 +57,7 @@ class MainTableViewController: UITableViewController, RSSParserDelegate, RSSFeed
     override func viewDidLoad() {
         super.viewDidLoad()
         collection = RSSSharedCollection.getInstance().getCollection()
+        collection!.clear()
         collection!.delegate = self
         collection!.addFeedURL( NSURL(string: "http://rss.cbc.ca/lineup/topstories.xml")! )
         collection!.addFeedURL( NSURL(string: "http://www.nbcnewyork.com/news/top-stories/?rss=y&embedThumb=y&summary=y")! )
@@ -165,16 +166,30 @@ class MainTableViewController: UITableViewController, RSSParserDelegate, RSSFeed
     
     override func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]?
     {
-        let favorite = UITableViewRowAction(style: .Default, title: "Happy!", handler: { (action, indexPath) in
-            // Get the cell from indexPath.section and indexPath.row
-            
-            //collection!.addFavorite( entry )
-            print("Favorited")
-        })
-        favorite.backgroundColor = UIColor(patternImage: UIImage(named: "UIBarButtonSystemItemDone")!)
-        return [favorite]
+        // Get the cell from indexPath.section and indexPath.row
+        let entry = collection!.feeds[indexPath.section].entries[indexPath.row]
+        
+        let isFavorite = collection!.isFavorite( entry )
+        
+        
+        var result = [UITableViewRowAction]()
+        
+        print( isFavorite )
+        if isFavorite{
+            let favorite = UITableViewRowAction(style: .Destructive, title: "Unfavorite", handler: { (action, indexPath) in
+                self.collection!.removeFavorite( entry )
+                self.tableView.reloadData()
+            })
+            result.append(favorite)
+        }else{
+            let favorite = UITableViewRowAction(style: .Normal, title: "Favorite", handler: { (action, indexPath) in
+                self.collection!.addFavorite( entry )
+                self.tableView.reloadData()
+            })
+            result.append(favorite)
+        }
+        return result
     }
-
     //------------------------------------------------------------
     // MARK: - Navigation
     //------------------------------------------------------------
