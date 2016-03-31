@@ -156,7 +156,8 @@ class RSSParser: NSObject, NSXMLParserDelegate {
                 }
                 // Handle category information
             } else if let entry = currentEntry {
-                
+                print("\(elementName) - \(channel!.title)")
+                    
                 // Check if the closed tags are of interest
                 if elementName == "link"{
                     print("link: \(channel!.title)")

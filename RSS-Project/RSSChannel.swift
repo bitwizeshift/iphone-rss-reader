@@ -20,7 +20,7 @@ class RSSChannel : NSObject, NSCoding, NSCopying{
     // MARK: - Private Attributes
     //------------------------------------------------------------------------
     
-    private var rssEntries : [RSSEntry] = [RSSEntry]()
+    private var rssEntries   : [RSSEntry] = [RSSEntry]()
 
     //------------------------------------------------------------------------
     // MARK: - Public Attributes

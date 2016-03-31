@@ -58,8 +58,9 @@ class MainTableViewController: UITableViewController, RSSParserDelegate, RSSFeed
         super.viewDidLoad()
         collection = RSSSharedCollection.getInstance().getCollection()
         collection!.delegate = self
-        //collection!.addFeedURL( NSURL(string: "http://rss.cbc.ca/lineup/topstories.xml")! )
-        collection!.addFeedURL( NSURL(string: "http://rss.cnn.com/rss/edition.rss")! )
+        collection!.addFeedURL( NSURL(string: "http://rss.cbc.ca/lineup/topstories.xml")! )
+        collection!.addFeedURL( NSURL(string: "http://www.nbcnewyork.com/news/top-stories/?rss=y&embedThumb=y&summary=y")! )
+        collection!.addFeedURL( NSURL(string: "http://feeds.feedburner.com/patheos/igFf?format=xml")! )
 
         collection!.refresh( false );
         entries = collection!.entries
@@ -156,6 +157,22 @@ class MainTableViewController: UITableViewController, RSSParserDelegate, RSSFeed
         } else if editingStyle == .Insert {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
         }
+    }
+    
+    override func tableView(tableView: UITableView, titleForDeleteConfirmationButtonForRowAtIndexPath indexPath: NSIndexPath) -> String? {
+        return "Erase"
+    }
+    
+    override func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]?
+    {
+        let favorite = UITableViewRowAction(style: .Default, title: "Happy!", handler: { (action, indexPath) in
+            // Get the cell from indexPath.section and indexPath.row
+            
+            //collection!.addFavorite( entry )
+            print("Favorited")
+        })
+        favorite.backgroundColor = UIColor(patternImage: UIImage(named: "UIBarButtonSystemItemDone")!)
+        return [favorite]
     }
 
     //------------------------------------------------------------
@@ -293,6 +310,7 @@ extension ContainerViewController: UIGestureRecognizerDelegate {
         switch(recognizer.state) {
         case .Began:
             if (currentState == .BothCollapsed) {
+                
                 if (gestureIsDraggingFromLeftToRight) {
                     addLeftPanelViewController()
                 } else {

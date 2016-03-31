@@ -19,6 +19,9 @@ class WebViewController: UIViewController, UITabBarDelegate, WKNavigationDelegat
     var spinnerIndicator : UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRectMake(0,0, 100, 100))
     var entry: RSSEntry? = nil
     
+    // The collection, used for favoriting
+    var collection : RSSCollection? = nil;
+    
     //------------------------------------------------------------------------
     // MARK: - Outlets
     //------------------------------------------------------------------------
