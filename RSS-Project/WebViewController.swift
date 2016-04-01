@@ -15,6 +15,7 @@ class WebViewController: UIViewController, UITabBarDelegate, WKNavigationDelegat
     // MARK: - Public Variables
     //------------------------------------------------------------------------
     
+    @IBOutlet var webBar: UIView!
     var webView : WKWebView = WKWebView()
     var spinnerIndicator : UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRectMake(0,0, 100, 100))
     var entry: RSSEntry? = nil
@@ -27,36 +28,37 @@ class WebViewController: UIViewController, UITabBarDelegate, WKNavigationDelegat
     //------------------------------------------------------------------------
 
     @IBOutlet weak var navigationBar: UINavigationItem!
-    @IBOutlet weak var bottomBar: UIView!
 
     //------------------------------------------------------------------------
     // MARK: - Actions
     //------------------------------------------------------------------------
     
     //
-    // Forward navigation
+    // Backward navigation
     //
-//    @IBAction func forwardNav(sender: AnyObject) {
-//        if (self.webView.canGoForward) {
-//            webView.goForward()
-//        }
-//    }
-   
+
+    @IBAction func backwardNav(sender: AnyObject) {
+        if (self.webView.canGoBack) {
+            webView.goBack()
+        }
+    }
+    
     //
     // Refresh navigation
     //
-//    @IBAction func refreshWebView(sender: AnyObject) {
-//        webView.reload()
-//    }
+    @IBAction func refreshWebView(sender: AnyObject) {
+        webView.reload()
+    }
     
     //
-    // Backward navigation
+    // Forward navigation
     //
-//    @IBAction func backNav(sender: AnyObject) {
-//        if (self.webView.canGoBack) {
-//            webView.goBack()
-//        }
-//    }
+    @IBAction func forwardNav(sender: AnyObject) {
+        if (self.webView.canGoForward) {
+            webView.goForward()
+        }
+    }
+
     
     //------------------------------------------------------------------------
     // MARK: - View Loading
@@ -70,7 +72,8 @@ class WebViewController: UIViewController, UITabBarDelegate, WKNavigationDelegat
         
         // Allow the web-view gestures
         self.webView.allowsBackForwardNavigationGestures = true
-        
+        //add view for web nav bar
+//        webBar.frame = CGRect(x:0, y: 0, width: view.frame.width, height: 30)
         // Set the navigation title
         self.navigationBar.title = entry!.title
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Bookmarks, target: self, action: "addBookmark")
@@ -109,8 +112,11 @@ class WebViewController: UIViewController, UITabBarDelegate, WKNavigationDelegat
     // Create the subview layouts
     //
     override func viewWillLayoutSubviews() {
+//        self.webBar.frame = CGRect(x:0, y: 0, width: self.view.frame.size.width, height: 30)
         let TOP_MARGIN    : CGFloat = UIApplication.sharedApplication().statusBarFrame.size.height
-        self.webView.frame = CGRectMake(0, TOP_MARGIN, self.view.frame.size.width, self.view.frame.size.height - 100 - TOP_MARGIN)
+        let BOTTOM_MARGIN : CGFloat = 40
+        self.webView.frame = CGRectMake(0, TOP_MARGIN, self.view.frame.size.width, self.view.frame.size.height - BOTTOM_MARGIN - TOP_MARGIN)
+        
         
     }
     //

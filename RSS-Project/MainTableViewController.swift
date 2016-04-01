@@ -65,6 +65,8 @@ class MainTableViewController: UITableViewController, RSSParserDelegate, RSSFeed
         collection!.refresh( false );
         entries = collection!.entries
         
+        //enable pull down refresh
+        self.refreshControl?.addTarget(self, action: "pullDownRefresh:", forControlEvents: UIControlEvents.ValueChanged)
         
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -79,7 +81,16 @@ class MainTableViewController: UITableViewController, RSSParserDelegate, RSSFeed
         
         // Dispose of any resources that can be recreated.
     }
-
+    //
+    // Pull Down - Refresh Table
+    //
+    func pullDownRefresh(refreshControl: UIRefreshControl) {
+        //Refresh
+        print("Refreshing table")
+        self.tableView.reloadData()
+        refreshControl.endRefreshing()
+    }
+    
     //------------------------------------------------------------------------
     // MARK: - Table View Data Source
     //------------------------------------------------------------------------
