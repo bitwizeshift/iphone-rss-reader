@@ -27,7 +27,6 @@ class MainTableViewController: UITableViewController, RSSParserDelegate, RSSFeed
     //------------------------------------------------------------------------
 
     private var indicator = RefCountedIndicator()
-
     private var collection : RSSCollection? = nil
     private var entries    : [RSSEntry]?    = nil
     
@@ -367,10 +366,11 @@ extension ContainerViewController: UIGestureRecognizerDelegate {
     }
     
 }
-
+//
+// Handles filters being selected from right side panel
+//
 extension MainTableViewController: RightTableViewControllerDelegate {
     func filterSelected(filter: Int) {
-
         if (filter == 0){
             print("Filter by bookmarks")
         }else if(filter == 1){
@@ -382,13 +382,11 @@ extension MainTableViewController: RightTableViewControllerDelegate {
         delegate?.collapseSidePanels?()
     }
 }
-
+//
+//  Handles Selection of source
+//
 extension MainTableViewController: SideTableViewControllerDelegate {
     func categorySelected(category: String) {
-//        imageView.image = animal.image
-//        titleLabel.text = animal.title
-//        creatorLabel.text = animal.creator
-        
         delegate?.collapseSidePanels?()
     }
 }
