@@ -15,6 +15,7 @@ protocol SideTableViewControllerDelegate {
 class SideTableViewController: UITableViewController {
     var delegate: SideTableViewControllerDelegate?
     
+    @IBOutlet weak var newSourceField: UITextField!
     override func viewDidLoad() {
         super.viewDidLoad()
         // Uncomment the following line to preserve selection between presentations
@@ -23,7 +24,12 @@ class SideTableViewController: UITableViewController {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
     }
-
+    //
+    //  ADD New URL
+    //
+    @IBAction func addNewSource(sender: AnyObject) {
+        print(self.newSourceField.text)
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

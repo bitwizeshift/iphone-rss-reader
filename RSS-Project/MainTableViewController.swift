@@ -369,11 +369,15 @@ extension ContainerViewController: UIGestureRecognizerDelegate {
 }
 
 extension MainTableViewController: RightTableViewControllerDelegate {
-    func filterSelected(filter: String) {
+    func filterSelected(filter: Int) {
 
-        //        imageView.image = animal.image
-        //        titleLabel.text = animal.title
-        //        creatorLabel.text = animal.creator
+        if (filter == 0){
+            print("Filter by bookmarks")
+        }else if(filter == 1){
+            print("Filter by categories")
+        }else if(filter == 2){
+            print("Filter by source")
+        }
         
         delegate?.collapseSidePanels?()
     }

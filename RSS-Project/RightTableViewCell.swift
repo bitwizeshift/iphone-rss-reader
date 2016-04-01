@@ -9,6 +9,7 @@
 import UIKit
 
 class RightTableViewCell: UITableViewCell {
+    @IBOutlet weak var filterType: UILabel!
 
     override func awakeFromNib() {
         super.awakeFromNib()

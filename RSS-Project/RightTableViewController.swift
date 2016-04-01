@@ -9,14 +9,17 @@
 import UIKit
 @objc
 protocol RightTableViewControllerDelegate {
-    func filterSelected(filter: String)
+    func filterSelected(filter: Int)
 }
 class RightTableViewController: UITableViewController {
     var delegate: RightTableViewControllerDelegate?
-
+    
+    
+    
+    
     override func viewDidLoad() {
+       
         super.viewDidLoad()
-
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -38,18 +41,26 @@ class RightTableViewController: UITableViewController {
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 10
+        return 3
     }
 
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         //        let filter = filters[indexPath.row]
-        delegate?.filterSelected("test filter")
+        delegate?.filterSelected(indexPath.row)
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("RightTableViewCell", forIndexPath: indexPath)
-
+        let cell = tableView.dequeueReusableCellWithIdentifier("RightTableViewCell", forIndexPath: indexPath) as! RightTableViewCell
         // Configure the cell...
+        
+        if (indexPath.row == 0 ){
+            cell.filterType.text = "Bookmarked"
+        }else if (indexPath.row == 1){
+            cell.filterType.text = "Category"
+        }
+        else if (indexPath.row == 2){
+            cell.filterType.text = "Source"
+        }
 
         return cell
     }

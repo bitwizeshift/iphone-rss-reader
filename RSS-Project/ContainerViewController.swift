@@ -26,7 +26,7 @@ class ContainerViewController: UIViewController {
     }
     var sideTableViewController: SideTableViewController?
     var rightTableViewController: RightTableViewController?
-    let centerPanelExpandedOffset: CGFloat = 100
+    let centerPanelExpandedOffset: CGFloat = 50
     
     override func viewDidLoad() {
         super.viewDidLoad()
