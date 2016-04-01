@@ -14,18 +14,16 @@ class RSSCollection : NSObject, NSCoding {
     // MARK: - Private Attributes
     //------------------------------------------------------------------------
 
-    private var feedDelegate   : RSSFeedDelegate?   = nil
-    private var rssFeeds    = [RSSFeed]()
-    private var favorites   = [RSSEntry]()
-    private var blacklisted = [RSSEntry]()
-        
+    private var feedDelegate : RSSFeedDelegate?   = nil
+    private var rssFeeds     = [RSSFeed]()
+    private var rssFavorites = [RSSEntry]()
+
     //------------------------------------------------------------------------
     // MARK: - Private Static Attributes
     //------------------------------------------------------------------------
     
     private static let FEEDS_KEY       = "rssCollectionFeedsKey"
     private static let FAVORITES_KEY   = "rssCollectionFavoritesKey"
-    private static let BLACKLISTED_KEY = "rssCollectionBlacklistedKey"
 
     //----------------------------------------------------------------------------
     // MARK: - Constructor
@@ -43,9 +41,8 @@ class RSSCollection : NSObject, NSCoding {
     //
     @objc required init?(coder decoder: NSCoder) {
         print("Decoding RSSCollection")
-        rssFeeds    = decoder.decodeObjectForKey(RSSCollection.FEEDS_KEY)       as! [RSSFeed]
-        favorites   = decoder.decodeObjectForKey(RSSCollection.FAVORITES_KEY)   as! [RSSEntry]
-        blacklisted = decoder.decodeObjectForKey(RSSCollection.BLACKLISTED_KEY) as! [RSSEntry]
+        rssFeeds     = decoder.decodeObjectForKey(RSSCollection.FEEDS_KEY)     as! [RSSFeed]
+        rssFavorites = decoder.decodeObjectForKey(RSSCollection.FAVORITES_KEY) as! [RSSEntry]
     }
     
     //----------------------------------------------------------------------------
@@ -115,9 +112,7 @@ class RSSCollection : NSObject, NSCoding {
             var entries = [RSSEntry]()
             for feed in feeds{
                 for entry in feed.entries{
-                    if !blacklisted.contains(entry){
-                        entries.append(entry)
-                    }
+                    entries.append(entry)
                 }
             }
             return entries.sort(){ return $0.title < $1.title }
@@ -177,6 +172,40 @@ class RSSCollection : NSObject, NSCoding {
         return true
     }
     
+    //
+    // Adds an entry to the list of favorited entries
+    //
+    func addFavorite( entry : RSSEntry ) -> Bool {
+        if !isFavorite( entry ){
+            rssFavorites.append( entry )
+            return true
+        }
+        return false
+    }
+    
+    //
+    // Removes a favorite from the favorites section
+    //
+    func removeFavorite( entry : RSSEntry ) -> Bool {
+        let before = rssFeeds.count
+        rssFavorites = rssFavorites.filter(){ $0 != entry }
+        let after = rssFeeds.count
+        
+        return before > after
+    }
+    
+    //
+    // Is this RSS entry a favorite entry?
+    //
+    func isFavorite( entry : RSSEntry ) -> Bool {
+        for e in rssFavorites{
+            if e == entry{
+                return true
+            }
+        }
+        return false
+    }
+    
     //----------------------------------------------------------------------------
 
     //
@@ -205,13 +234,11 @@ class RSSCollection : NSObject, NSCoding {
     }
     
     //
-    // Clears the entire RSSCollection of data, removing all channels, favoritess,
-    // and blacklisted entries
+    // Clears the entire RSSCollection of data, removing all channels and favorites
     //
     func clear(){
         rssFeeds.removeAll()
-        favorites.removeAll()
-        blacklisted.removeAll()
+        rssFavorites.removeAll()
     }
     
     //------------------------------------------------------------------------
@@ -226,8 +253,7 @@ class RSSCollection : NSObject, NSCoding {
         print("Encoding RSSCollection")
         
         coder.encodeObject(rssFeeds, forKey:  RSSCollection.FEEDS_KEY)
-        coder.encodeObject(favorites, forKey: RSSCollection.FAVORITES_KEY)
-        coder.encodeObject(blacklisted, forKey: RSSCollection.BLACKLISTED_KEY)
+        coder.encodeObject(rssFavorites, forKey: RSSCollection.FAVORITES_KEY)
     }
     
 }

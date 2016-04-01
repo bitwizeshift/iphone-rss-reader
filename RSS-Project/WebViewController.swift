@@ -19,6 +19,9 @@ class WebViewController: UIViewController, UITabBarDelegate, WKNavigationDelegat
     var spinnerIndicator : UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRectMake(0,0, 100, 100))
     var entry: RSSEntry? = nil
     
+    // The collection, used for favoriting
+    var collection : RSSCollection? = nil;
+    
     //------------------------------------------------------------------------
     // MARK: - Outlets
     //------------------------------------------------------------------------
@@ -71,6 +74,11 @@ class WebViewController: UIViewController, UITabBarDelegate, WKNavigationDelegat
         // Set the navigation title
         self.navigationBar.title = entry!.title
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Bookmarks, target: self, action: "addBookmark")
+        if collection!.isFavorite( entry! ){
+            self.navigationItem.rightBarButtonItem!.tintColor = UIColor.blueColor()
+        }else{
+            self.navigationItem.rightBarButtonItem!.tintColor = UIColor.grayColor()
+        }
         
         // Set the background color to white
         self.view.backgroundColor = UIColor.whiteColor()
@@ -101,7 +109,6 @@ class WebViewController: UIViewController, UITabBarDelegate, WKNavigationDelegat
     // Create the subview layouts
     //
     override func viewWillLayoutSubviews() {
-//        let BOTTOM_MARGIN : CGFloat = self.bottomBar.frame.size.height;
         let TOP_MARGIN    : CGFloat = UIApplication.sharedApplication().statusBarFrame.size.height
         self.webView.frame = CGRectMake(0, TOP_MARGIN, self.view.frame.size.width, self.view.frame.size.height - 100 - TOP_MARGIN)
         
@@ -110,7 +117,17 @@ class WebViewController: UIViewController, UITabBarDelegate, WKNavigationDelegat
     // Add story to bookmarks
     //
     func addBookmark(){
-        print("Bookmark Added")
+        if collection!.isFavorite( entry! ){
+            collection!.removeFavorite( entry! )
+            print("Bookmark Removed")
+            self.navigationItem.rightBarButtonItem!.tintColor = UIColor.grayColor()
+            
+            
+        }else{
+            collection!.addFavorite( entry! )
+            print("Bookmark Added")
+            self.navigationItem.rightBarButtonItem!.tintColor = UIColor.blueColor()
+        }
     }
     //------------------------------------------------------------------------
     // MARK: - WKNavigationDelegate
