@@ -58,6 +58,7 @@ class SideTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         //Looks for single or multiple taps.
+        newSourceField.autocorrectionType = .No
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "dismissKeyboard")
         view.addGestureRecognizer(tap)
         // Long tap recognizer for deleting sources
@@ -139,9 +140,15 @@ class SideTableViewController: UITableViewController {
             }else if delegate!.addFeed( urlString ){
                 self.tableView.reloadData()
             }else{
-                let alert = UIAlertController(title: "Feed Exists", message: "Feed at url \(urlString) already exists!", preferredStyle: UIAlertControllerStyle.Alert)
-                alert.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default,handler: nil))
-                self.presentViewController(alert, animated: true, completion: nil)
+                if NSURL( string: urlString ) == nil {
+                    let alert = UIAlertController(title: "URL Invalid", message: "Feed at url \(urlString) is not valid!", preferredStyle: UIAlertControllerStyle.Alert)
+                    alert.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default,handler: nil))
+                    self.presentViewController(alert, animated: true, completion: nil)
+                }else{
+                    let alert = UIAlertController(title: "Feed Exists", message: "Feed at url \(urlString) already exists!", preferredStyle: UIAlertControllerStyle.Alert)
+                    alert.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default,handler: nil))
+                    self.presentViewController(alert, animated: true, completion: nil)
+                }
             }
         }
     }

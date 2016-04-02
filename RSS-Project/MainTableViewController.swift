@@ -68,11 +68,11 @@ class MainTableViewController: UITableViewController, RSSParserDelegate, RSSFeed
         
         collection = RSSSharedCollection.getInstance().getCollection()
         collection!.delegate = self
-        //collection!.clear()
+        collection!.clear()
         collection!.addFeedURL( NSURL(string: "http://rss.cbc.ca/lineup/topstories.xml")! )
-        collection!.addFeedURL( NSURL(string: "http://www.nbcnewyork.com/news/top-stories/?rss=y&embedThumb=y&summary=y")! )
-        collection!.addFeedURL( NSURL(string: "http://rss.cnn.com/rss/cnn_topstories.rss")! )
-        collection!.addFeedURL( NSURL(string: "http://feeds.feedburner.com/patheos/igFf?format=xml")! )
+        //collection!.addFeedURL( NSURL(string: "http://www.nbcnewyork.com/news/top-stories/?rss=y&embedThumb=y&summary=y")! )
+        //collection!.addFeedURL( NSURL(string: "http://rss.cnn.com/rss/cnn_topstories.rss")! )
+        //collection!.addFeedURL( NSURL(string: "http://feeds.feedburner.com/patheos/igFf?format=xml")! )
         
         
 
@@ -82,7 +82,7 @@ class MainTableViewController: UITableViewController, RSSParserDelegate, RSSFeed
         self.refreshControl?.addTarget(self, action: "pullDownRefresh:", forControlEvents: UIControlEvents.ValueChanged)
         
         // Set update timer
-        self.updateTimer = NSTimer.scheduledTimerWithTimeInterval(5*60.0, target: self, selector: "reload", userInfo: nil, repeats: true)
+        self.updateTimer = NSTimer.scheduledTimerWithTimeInterval(5*60.0, target: self, selector: "refresh", userInfo: nil, repeats: true)
         
         self.tableView.reloadData()
     }
@@ -158,7 +158,9 @@ class MainTableViewController: UITableViewController, RSSParserDelegate, RSSFeed
             // This syntax is retarded, Apple.
             self.orderFunc?()
         }
-        self.tableView.reloadData()
+        dispatch_async(dispatch_get_main_queue(), {
+            self.tableView.reloadData()
+        })
     }
 
     //
@@ -410,8 +412,13 @@ class MainTableViewController: UITableViewController, RSSParserDelegate, RSSFeed
     }
     
     func rssFeedError( feed: RSSFeed ) {
-        let alert = UIAlertController(title: "RSS Feed Error", message: "Feed \(feed.channelTitle) (\(feed.channelURL)) is improperly formatted and could not be parsed.", preferredStyle: UIAlertControllerStyle.Alert)
-        alert.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default,handler: nil))
+        let alert = UIAlertController(title: "RSS Feed Error", message: "Feed \(feed.channelTitle) (\(feed.channelURL)) is not a valid feed source. ", preferredStyle: UIAlertControllerStyle.Alert)
+        alert.addAction(UIAlertAction(title: "Keep", style: UIAlertActionStyle.Default,handler: nil))
+        alert.addAction(UIAlertAction(title: "Remove", style: UIAlertActionStyle.Destructive, handler: {(alert: UIAlertAction!) in
+                self.collection!.removeFeed( feed )
+                self.reorder()
+                self.delegate?.collapseSidePanels?()
+            }))
         self.presentViewController(alert, animated: true, completion: nil)
     }
 }

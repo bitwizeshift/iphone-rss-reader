@@ -342,14 +342,18 @@ class RSSParser: NSObject, NSXMLParserDelegate {
     // Called during parse errors. Just log the description
     //
     internal func parser(parser: NSXMLParser, parseErrorOccurred parseError: NSError) {
-        self.delegate?.rssParsingError?()
+        dispatch_async(dispatch_get_main_queue(),{
+            self.delegate?.rssParsingError?()
+        })
     }
     
     //
     // Called during validation errors. Just log the description
     //
     internal func parser(parser: NSXMLParser, validationErrorOccurred validationError: NSError) {
-        self.delegate?.rssValidationError?()
+        dispatch_async(dispatch_get_main_queue(),{
+            self.delegate?.rssValidationError?()
+        })
     }
     
 }

@@ -151,7 +151,22 @@ class RSSCollection : NSObject, NSCoding {
     //----------------------------------------------------------------------------
     // MARK: - Adding / Removing Feeds
     //----------------------------------------------------------------------------
-
+    
+    //
+    // Checks if a feed already exists by a URL
+    //
+    // This function returns true if the feed already exists
+    //
+    func feedExists( url : NSURL ) -> Bool {
+        let newfeed = RSSFeed( feedURL: url )
+        for f in feeds{
+            if newfeed == f {
+                return true
+            }
+        }
+        return false
+    }
+    
     //
     // Adds a feed by URL
     //
@@ -176,7 +191,7 @@ class RSSCollection : NSObject, NSCoding {
                 return false;
             }
         }
-        
+        feed.delegate = self.feedDelegate
         rssFeeds.append(feed)
         return true
     }
