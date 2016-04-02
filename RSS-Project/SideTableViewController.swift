@@ -14,8 +14,9 @@ protocol SideTableViewControllerDelegate {
 }
 class SideTableViewController: UITableViewController {
     var delegate: SideTableViewControllerDelegate?
-    
     @IBOutlet weak var newSourceField: UITextField!
+
+
     override func viewDidLoad() {
         super.viewDidLoad()
         // Uncomment the following line to preserve selection between presentations
@@ -27,6 +28,9 @@ class SideTableViewController: UITableViewController {
     //
     //  ADD New URL
     //
+    @IBAction func addSource(sender: AnyObject) {
+        print(self.newSourceField.text)
+    }
     @IBAction func addNewSource(sender: AnyObject) {
         print(self.newSourceField.text)
     }
@@ -54,6 +58,7 @@ class SideTableViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("SideMenuCell", forIndexPath: indexPath)
+        
 
         // Configure the cell...
 
@@ -69,17 +74,15 @@ class SideTableViewController: UITableViewController {
     }
     */
 
-    /*
+    
     // Override to support editing the table view.
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if editingStyle == .Delete {
             // Delete the row from the data source
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        } else if editingStyle == .Insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
+        }
     }
-    */
+
 
     /*
     // Override to support rearranging the table view.
