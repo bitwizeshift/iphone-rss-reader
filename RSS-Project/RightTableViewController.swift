@@ -41,7 +41,7 @@ class RightTableViewController: UITableViewController {
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 3
+        return 4
     }
 
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
@@ -54,12 +54,14 @@ class RightTableViewController: UITableViewController {
         // Configure the cell...
         
         if (indexPath.row == 0 ){
-            cell.filterType.text = "Bookmarked"
+            cell.filterType.text = "All (Chronological)"
         }else if (indexPath.row == 1){
-            cell.filterType.text = "Category"
+            cell.filterType.text = "All (Alphabetical)"
         }
         else if (indexPath.row == 2){
-            cell.filterType.text = "Source"
+            cell.filterType.text = "News Source"
+        }else if(indexPath.row == 3){
+            cell.filterType.text = "Bookmarked"
         }
 
         return cell

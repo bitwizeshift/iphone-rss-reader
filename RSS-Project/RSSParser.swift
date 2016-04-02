@@ -38,6 +38,8 @@ class RSSParser: NSObject, NSXMLParserDelegate {
     // List of all the entry tags we care about
     static private var ENTRY_TAGS = ["title","link","pubdate","author","description","category"]
     
+    static private let imageQueue = dispatch_queue_create("ImageQueue", DISPATCH_QUEUE_CONCURRENT);
+    
     private let dateFormatter = NSDateFormatter()
     
     private var currentEntry : RSSEntry? = nil
@@ -118,8 +120,18 @@ class RSSParser: NSObject, NSXMLParserDelegate {
         if( elementName == "channel"){
             inChannel = true
         }else if( elementName == "item"){
-            print("item: \(channel!.title)")
             currentEntry = RSSEntry()
+            currentEntry!.imageURL  = nil;
+            currentEntry!.imageData = nil;
+
+        }else if let entry = currentEntry{
+
+            if elementName == "media:thumbnail" || elementName == "media:content"{
+                if let urlString = attributeDict["url"]{
+                    entry.imageURL = NSURL( string: urlString );
+                }
+            }
+            
         }
         
         currentElement = elementName
@@ -156,8 +168,7 @@ class RSSParser: NSObject, NSXMLParserDelegate {
             }
             // Handle category information
         } else if let entry = currentEntry {
-            print("\(elementName) - \(channel!.title)")
-                    
+            
             // Check if the closed tags are of interest
             if elementName == "link"{
                 entry.link = NSURL( string: foundCharacters.trim())
@@ -172,28 +183,53 @@ class RSSParser: NSObject, NSXMLParserDelegate {
                 entry.author = foundCharacters.trim();
             }
             else if elementName == "description"{
+
                 let quoteSet = NSCharacterSet(charactersInString: "\"'")
+                
                 let IMG    = "<img"
                 let SRC    = "src="
                 
+                let MEDIA  = "<media:thumbnail"
+                let URL    = "url="
+                
+                let MEDIA_CONTENT = "<media:content"
+                
                 var source: NSString?
                 
-                // TODO: Update me
+                // Try to find <img tag first
                 
-                let theScanner = NSScanner(string: foundCharacters)
-                theScanner.scanUpToString(IMG, intoString: nil);
-                theScanner.scanString(IMG, intoString: nil)
-                theScanner.scanUpToString(SRC, intoString: nil);
-                theScanner.scanString(SRC, intoString: nil)
-                theScanner.scanUpToCharactersFromSet( quoteSet, intoString: nil ) // Go to starting quote
-                theScanner.scanCharactersFromSet( quoteSet, intoString: nil )
-                theScanner.scanUpToCharactersFromSet( quoteSet, intoString: &source )
+                var tag = "";
+                var attribute = "";
                 
-                if let urlString = source as? String{
-                    entry.imageURL = NSURL( string: urlString );
-                }else{
-                    entry.entryDescription = foundCharacters.stringByReplacingOccurrencesOfString("<[^>+>", withString: "", options: .RegularExpressionSearch, range: nil).trim()
+                if (foundCharacters.rangeOfString( MEDIA ) != nil){
+                    // Look for thumbnail before looking for full content
+                    tag = MEDIA;
+                    attribute = URL;
+                }else if (foundCharacters.rangeOfString( MEDIA_CONTENT ) != nil ){
+                    tag = MEDIA_CONTENT;
+                    attribute = URL;
+                }else if (foundCharacters.rangeOfString( IMG ) != nil){
+                    // Resort to searching for an image tag in the description i
+                    tag = IMG;
+                    attribute = SRC;
                 }
+                
+                if !tag.isEmpty && !attribute.isEmpty {
+                    let scanner = NSScanner(string: foundCharacters)
+                    scanner.scanUpToString(tag, intoString: nil);
+                    scanner.scanString(tag, intoString: nil)
+                    scanner.scanUpToString(attribute, intoString: nil);
+                    scanner.scanString(attribute, intoString: nil)
+                    scanner.scanUpToCharactersFromSet( quoteSet, intoString: nil ) // Go to starting quote
+                    scanner.scanCharactersFromSet( quoteSet, intoString: nil )
+                    scanner.scanUpToCharactersFromSet( quoteSet, intoString: &source )
+                    if let urlString = source as? String{
+                        entry.imageURL = NSURL( string: urlString );
+                    }
+                }
+                
+                // Strip the tags and extract any description, if one exists.
+                entry.entryDescription = foundCharacters.stringByReplacingOccurrencesOfString("<[^>+>", withString: "", options: .RegularExpressionSearch, range: nil).trim()
             }
             else if elementName == "category"{
                 entry.category = foundCharacters.trim();
@@ -206,7 +242,6 @@ class RSSParser: NSObject, NSXMLParserDelegate {
                         imageIndices.append(channel!.entries.count-1)
                     }
                 }
-                
                 currentEntry = nil
             }
         }
@@ -232,7 +267,7 @@ class RSSParser: NSObject, NSXMLParserDelegate {
     //
     internal func parserDidEndDocument(parser: NSXMLParser) {
         self.delegate?.rssCompleteParsing?()
-        let imageQueue = dispatch_queue_create("Image Queue", DISPATCH_QUEUE_CONCURRENT);
+        
         
         // Download all images for feeds
         for i in imageIndices{
@@ -241,7 +276,7 @@ class RSSParser: NSObject, NSXMLParserDelegate {
             // Don't dispatch if a URL wasn't discovered
             if let url = entry.imageURL{
                 // Dispatch to download the image data
-                dispatch_async(imageQueue, {
+                dispatch_async(RSSParser.imageQueue, {
                     entry.imageData = NSData( contentsOfURL: url )
                     
                     // If the imageData was successfully loaded
@@ -268,14 +303,14 @@ class RSSParser: NSObject, NSXMLParserDelegate {
     // Called during parse errors. Just log the description
     //
     internal func parser(parser: NSXMLParser, parseErrorOccurred parseError: NSError) {
-        print(parseError.description)
+        self.delegate?.rssParsingError?()
     }
     
     //
     // Called during validation errors. Just log the description
     //
     internal func parser(parser: NSXMLParser, validationErrorOccurred validationError: NSError) {
-        print(validationError.description)
+        self.delegate?.rssValidationError?()
     }
     
 }

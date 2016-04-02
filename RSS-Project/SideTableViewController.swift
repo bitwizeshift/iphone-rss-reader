@@ -8,28 +8,75 @@
 
 import UIKit
 
-@objc
+//
+// Protocol: SideTableViewControllerDelegate
+//
+// This delegate handler is used for handling communication
+// between the MainTableView and the SideTableView
+//
 protocol SideTableViewControllerDelegate {
-    func categorySelected(category: String)
+
+    //
+    // Adds a feed given the URL String
+    //
+    func addFeed( urlString : String ) -> Bool
+    
+    //
+    // Removes a channel given the index of the string
+    //
+    func removeFeed( index : Int )
+    
+    //
+    // Filters the entries by source
+    //
+    func filterBySource( index : Int )
+    
+    //
+    // Number of feeds
+    //
+    func numberOfFeeds() -> Int;
+    
+    //
+    // Retrieve the feed at the specified index
+    //
+    func feedAtIndex( index: Int ) -> RSSFeed
+    
 }
+
+//
+// Controller: SideTableView
+//
+// This controller manages the side-table view, used for filtering and
+// adding new feeds to the system
+//
 class SideTableViewController: UITableViewController {
     var delegate: SideTableViewControllerDelegate?
     
     @IBOutlet weak var newSourceField: UITextField!
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
     }
+    
     //
-    //  ADD New URL
+    // ADD New URL
     //
     @IBAction func addNewSource(sender: AnyObject) {
         print(self.newSourceField.text)
+        if let urlString = self.newSourceField.text{
+            if urlString.isEmpty{
+                let alert = UIAlertController(title: "Empty Input", message: "Please provide a URL before adding", preferredStyle: UIAlertControllerStyle.Alert)
+                alert.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default,handler: nil))
+                self.presentViewController(alert, animated: true, completion: nil)
+            }else if delegate!.addFeed( urlString ){
+                self.tableView.reloadData()
+            }else{
+                let alert = UIAlertController(title: "Feed Exists", message: "Feed at url \(urlString) already exists!", preferredStyle: UIAlertControllerStyle.Alert)
+                alert.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default,handler: nil))
+                self.presentViewController(alert, animated: true, completion: nil)
+            }
+        }
     }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -44,66 +91,22 @@ class SideTableViewController: UITableViewController {
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 10
+        return (delegate?.numberOfFeeds())!
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-//        let category = categories[indexPath.row]
-        delegate?.categorySelected("test category")
+        delegate?.filterBySource( indexPath.row )
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("SideMenuCell", forIndexPath: indexPath)
+        let cell = tableView.dequeueReusableCellWithIdentifier("SideMenuCell", forIndexPath: indexPath) as! SideTableViewCell
 
-        // Configure the cell...
+        if let feed = delegate?.feedAtIndex( indexPath.row ){
+            //cell.
+            //
+        }
 
         return cell
     }
-    
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == .Delete {
-            // Delete the row from the data source
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        } else if editingStyle == .Insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(tableView: UITableView, moveRowAtIndexPath fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }

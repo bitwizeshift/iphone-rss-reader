@@ -28,6 +28,9 @@ import Foundation
     //
     optional func rssCompleteParsing()
     
+    //
+    // Method called hwne the parser begins downloading an image
+    //
     optional func rssImageBeginDownload( index : Int )
     
     //
@@ -39,4 +42,14 @@ import Foundation
     // Method called every time an RSS Image is not successfully downloaded
     //
     optional func rssImageDownloadFailure( index : Int )
+    
+    //
+    // Method called when there is a validation error
+    //
+    optional func rssValidationError()
+    
+    //
+    // Method called when there is a parsing error
+    //
+    optional func rssParsingError()
 }

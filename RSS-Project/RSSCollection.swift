@@ -88,6 +88,15 @@ class RSSCollection : NSObject, NSCoding {
             return e;
         }
     }
+    
+    //
+    // Property to retrieve all entries in the favorites
+    //
+    var favorites : [RSSEntry]{
+        get{
+            return rssFavorites
+        }
+    }
 
     //
     // Property to retrieve all entries in a feed sorted chronologically

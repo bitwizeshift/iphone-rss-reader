@@ -25,10 +25,17 @@ class MainTableViewController: UITableViewController, RSSParserDelegate, RSSFeed
     //------------------------------------------------------------------------
     // MARK: - Private Attributes
     //------------------------------------------------------------------------
+    
+    // The function type for ordering the data
+    typealias orderFuncType = ()->()
 
     private var indicator = RefCountedIndicator()
     private var collection : RSSCollection? = nil
-    private var entries    : [RSSEntry]?    = nil
+    
+    private var sections   : [String]       = [String]()
+    private var entries    : [[RSSEntry]]   = [[RSSEntry]]()
+    
+    private var orderFunc  : orderFuncType? = nil;
     
     //------------------------------------------------------------------------
     // MARK: - Actions
@@ -55,23 +62,23 @@ class MainTableViewController: UITableViewController, RSSParserDelegate, RSSFeed
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.orderFunc = orderByChannel
+        
         collection = RSSSharedCollection.getInstance().getCollection()
         collection!.delegate = self
+        collection!.clear()
         collection!.addFeedURL( NSURL(string: "http://rss.cbc.ca/lineup/topstories.xml")! )
         collection!.addFeedURL( NSURL(string: "http://www.nbcnewyork.com/news/top-stories/?rss=y&embedThumb=y&summary=y")! )
-        collection!.addFeedURL( NSURL(string: "http://feeds.feedburner.com/patheos/igFf?format=xml")! )
+        collection!.addFeedURL( NSURL(string: "http://rss.cnn.com/rss/cnn_topstories.rss")! )
+        //collection!.addFeedURL( NSURL(string: "http://feeds.feedburner.com/patheos/igFf?format=xml")! )
+        
+        
 
         collection!.refresh( false );
-        entries = collection!.entries
         
         //enable pull down refresh
         self.refreshControl?.addTarget(self, action: "pullDownRefresh:", forControlEvents: UIControlEvents.ValueChanged)
         
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
         self.tableView.reloadData()
     }
     
@@ -80,13 +87,89 @@ class MainTableViewController: UITableViewController, RSSParserDelegate, RSSFeed
         
         // Dispose of any resources that can be recreated.
     }
+    
+    //------------------------------------------------------------------------
+    // MARK: - Ordering
+    //------------------------------------------------------------------------
+
+    func orderByChronological(){
+        // Reset data
+        self.sections = [String]()
+        self.entries  = [[RSSEntry]]()
+        
+        self.sections.append("Chronological")
+        self.entries.append( self.collection!.entriesChronological )
+    }
+    
+    func orderByAlphabetical(){
+        // Reset data
+        self.sections = [String]()
+        self.entries  = [[RSSEntry]]()
+        
+        self.sections.append("Alphabetical")
+        self.entries.append( self.collection!.entriesAlphabetical )
+    }
+
+    
+    //
+    // Arranges all the feeds by channels
+    //
+    func orderByChannel(){
+        
+        // Reset data
+        self.sections = [String]()
+        self.entries  = [[RSSEntry]]()
+        
+        // Alphabetize the feeds
+        let feeds = collection!.feeds.sort{ return $0.channelTitle < $1.channelTitle }
+
+        // Add the data
+        for feed in feeds{
+            self.sections.append(feed.channelTitle);
+            self.entries.append(feed.entries);
+        }
+    }
+    
+    //
+    // Arranges all the feeds by favorites
+    //
+    func orderByFavorites(){
+        
+        // Reset data
+        self.sections = [String]()
+        self.entries  = [[RSSEntry]]()
+
+        // Set up the data
+        self.sections.append("Bookmarked")
+        self.entries.append(collection!.favorites)
+        
+    }
+    
+    //
+    // Reorders the RSS Data and reloads the table
+    //
+    func reorder(){
+        if orderFunc != nil{
+            // This syntax is retarded, Apple.
+            self.orderFunc?()
+        }
+        self.tableView.reloadData()
+    }
+
+    //
+    // Refresh all data
+    //
+    func refresh(){
+        collection!.refresh(false)
+    }
+    
     //
     // Pull Down - Refresh Table
     //
     func pullDownRefresh(refreshControl: UIRefreshControl) {
         //Refresh
         print("Refreshing table")
-        self.tableView.reloadData()
+        self.refresh()
         refreshControl.endRefreshing()
     }
     
@@ -95,57 +178,45 @@ class MainTableViewController: UITableViewController, RSSParserDelegate, RSSFeed
     //------------------------------------------------------------------------
 
     //
-    // Section indices for the table view
-    //
-    override func sectionIndexTitlesForTableView(tableView: UITableView) -> [String]? {
-        var keys = [String]()
-        for feed in collection!.feeds{
-            if !feed.channelTitle.isEmpty && !keys.contains( feed.channelTitle[0].uppercaseString ){
-                keys.append( feed.channelTitle[0].uppercaseString )
-            }
-        }
-        return keys
-    }
-
-    //
     // The number of sections in this Table
     //
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return collection!.feeds.count
+        return self.sections.count
     }
 
     //
     // The title for the individual section
     //
     override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return collection!.feeds[section].channelTitle
+        return self.sections[section]
     }
 
     //
     // The number of rows in the section
     //
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return collection!.feeds[section].entries.count
+        return self.entries[section].count
     }
     
     //
     // Gets the cell for the table
     //
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let entry = collection!.feeds[indexPath.section].entries[indexPath.row] 
+        let entry = self.entries[indexPath.section][indexPath.row]
+        
         let cell = tableView.dequeueReusableCellWithIdentifier("MainFeedCell", forIndexPath: indexPath) as! MainTableViewCell
         if let data = entry.imageData {
             cell.storyImg.image  = UIImage( data: data )
+        }else{
+            // TODO: Set some default image for one not found
         }
         
-        cell.storyTitle.text = entry.title
+        cell.storyTitle.text    = entry.title
         cell.storyCategory.text = entry.category
 
         return cell
     }
-
     
     //
     // Override to support conditional editing of the table view.
@@ -159,46 +230,35 @@ class MainTableViewController: UITableViewController, RSSParserDelegate, RSSFeed
     // Override to support editing the table view.
     //
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == .Delete {
-            // Delete the row from the data source
-            //tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-            
-            // TODO: Add to block list
-        } else if editingStyle == .Insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }
-    }
-    
-    override func tableView(tableView: UITableView, titleForDeleteConfirmationButtonForRowAtIndexPath indexPath: NSIndexPath) -> String? {
-        return "Erase"
+        // Intentionally left empty
     }
     
     override func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]?
     {
         // Get the cell from indexPath.section and indexPath.row
-        let entry = collection!.feeds[indexPath.section].entries[indexPath.row]
+        let entry = self.entries[indexPath.section][indexPath.row]
         
         let isFavorite = collection!.isFavorite( entry )
-        
         
         var result = [UITableViewRowAction]()
         
         print( isFavorite )
         if isFavorite{
-            let favorite = UITableViewRowAction(style: .Destructive, title: "Unfavorite", handler: { (action, indexPath) in
+            let favorite = UITableViewRowAction(style: .Destructive, title: "Unbookmark", handler: { (action, indexPath) in
                 self.collection!.removeFavorite( entry )
-                self.tableView.reloadData()
+                self.reorder()
             })
             result.append(favorite)
         }else{
-            let favorite = UITableViewRowAction(style: .Normal, title: "Favorite", handler: { (action, indexPath) in
+            let favorite = UITableViewRowAction(style: .Normal, title: "Bookmark", handler: { (action, indexPath) in
                 self.collection!.addFavorite( entry )
-                self.tableView.reloadData()
+                self.reorder()
             })
             result.append(favorite)
         }
         return result
     }
+    
     //------------------------------------------------------------
     // MARK: - Navigation
     //------------------------------------------------------------
@@ -208,8 +268,12 @@ class MainTableViewController: UITableViewController, RSSParserDelegate, RSSFeed
     //
     override func prepareForSegue(segue: (UIStoryboardSegue!), sender: AnyObject!) {
         if (segue.identifier == "goToWebView") {
+            let section = tableView.indexPathForSelectedRow!.section
+            let row = tableView.indexPathForSelectedRow!.row
+            
+            let entry = self.entries[section][row]
             let detailVC = segue!.destinationViewController as! WebViewController
-            detailVC.entry = self.entries![tableView.indexPathForSelectedRow!.row]
+            detailVC.entry = entry
             detailVC.collection = collection
         }
     }
@@ -230,7 +294,8 @@ class MainTableViewController: UITableViewController, RSSParserDelegate, RSSFeed
     //
     func rssCompleteParsing(){
         print("Ending RSS Parsing")
-        entries = collection!.entriesChronological
+        //entries = collection!.entriesChronological
+        self.reorder()
         self.tableView.reloadData()
     }
     
@@ -272,12 +337,8 @@ class MainTableViewController: UITableViewController, RSSParserDelegate, RSSFeed
     // Method called when the RSS Feed is downloaded successfully
     //
     func rssFeedDownloadSuccess(){
-        entries = collection!.entriesAlphabetical
-        self.tableView.reloadData()
-        
         print("Complete download")
         indicator.disable()
-        
     }
     
     //
@@ -292,8 +353,7 @@ class MainTableViewController: UITableViewController, RSSParserDelegate, RSSFeed
     // Method called when the RSS feed downloads and updates the new feed
     //
     func rssFeedUpdated(){
-        entries = collection!.entriesChronological
-        self.tableView.reloadData()
+        self.reorder()
     }
     
     //
@@ -322,6 +382,12 @@ class MainTableViewController: UITableViewController, RSSParserDelegate, RSSFeed
         
         print("[Failure] Image \(index) failed to download")
         indicator.disable()
+    }
+    
+    func rssFeedError( feed: RSSFeed ) {
+        let alert = UIAlertController(title: "RSS Feed Error", message: "Feed \(feed.channelTitle) (\(feed.channelURL)) is improperly formatted and could not be parsed.", preferredStyle: UIAlertControllerStyle.Alert)
+        alert.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default,handler: nil))
+        self.presentViewController(alert, animated: true, completion: nil)
     }
 }
 
@@ -372,22 +438,79 @@ extension ContainerViewController: UIGestureRecognizerDelegate {
 extension MainTableViewController: RightTableViewControllerDelegate {
     func filterSelected(filter: Int) {
         if (filter == 0){
-            print("Filter by bookmarks")
+            print("Filter by All (Chronological)")
+            self.orderFunc = orderByChronological
         }else if(filter == 1){
-            print("Filter by categories")
+            print("Filter by All (Alphabetical)")
+            self.orderFunc = orderByAlphabetical
         }else if(filter == 2){
-            print("Filter by source")
+            print("Filter by News Source")
+            self.orderFunc = orderByChannel
+        }else if(filter == 3){
+            print("Filter by Bookmarked")
+            self.orderFunc = orderByFavorites
         }
+        self.reorder()
         
         delegate?.collapseSidePanels?()
     }
 }
+
 //
 //  Handles Selection of source
 //
 extension MainTableViewController: SideTableViewControllerDelegate {
-    func categorySelected(category: String) {
+    //
+    // Adds a feed given the URL String
+    //
+    func addFeed( urlString : String ) -> Bool{
+        var added = false
+        if let url = NSURL(string: urlString ){
+            added = collection!.addFeedURL( url )
+        }
+        if added{
+            self.refresh()
+        }
+        return added
+    }
+    
+    //
+    // Removes a channel given the index of the string
+    //
+    func removeFeed( index : Int ){
+        collection!.removeFeed( collection!.feeds[index] )
+    }
+    
+    //
+    // Filters the entries by source
+    //
+    func filterBySource( index : Int ){
+        let feed = collection!.feeds[index]
+        orderFunc = {
+            // Reset data
+            self.sections = [String]()
+            self.entries  = [[RSSEntry]]()
+            
+            // Set up the data
+            self.sections.append(feed.channelTitle)
+            self.entries.append(feed.entries)
+        }
+        self.reorder()
         delegate?.collapseSidePanels?()
+    }
+    
+    //
+    // Number of feeds
+    //
+    func numberOfFeeds() -> Int{
+        return collection!.feeds.count
+    }
+    
+    //
+    // Retrieve the feed at the specified index
+    //
+    func feedAtIndex( index: Int ) -> RSSFeed{
+        return collection!.feeds[index]
     }
 }
 

@@ -125,8 +125,10 @@ extension ContainerViewController: MainTableViewControllerDelegate {
         } else {
             animateCenterPanelXPosition(0) { finished in
                 self.currentState = .BothCollapsed
-                self.sideTableViewController!.view.removeFromSuperview()
-                self.sideTableViewController = nil;
+                if self.sideTableViewController != nil {
+                    self.sideTableViewController!.view.removeFromSuperview()
+                    self.sideTableViewController = nil;
+                }
             }
         }
     }
@@ -137,8 +139,10 @@ extension ContainerViewController: MainTableViewControllerDelegate {
         } else {
             animateCenterPanelXPosition(0) { finished in
                 self.currentState = .BothCollapsed
-                self.rightTableViewController!.view.removeFromSuperview()
-                self.rightTableViewController = nil;
+                if self.rightTableViewController != nil{
+                    self.rightTableViewController!.view.removeFromSuperview()
+                    self.rightTableViewController = nil;
+                }
             }
         }
     }

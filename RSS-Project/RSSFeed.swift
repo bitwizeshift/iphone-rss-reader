@@ -68,6 +68,12 @@ class RSSFeed : NSObject, NSCoding, RSSParserDelegate{
     // MARK: - Public Properties
     //------------------------------------------------------------------------
     
+    var channelURL : String {
+        get{
+            return feedURL.absoluteString
+        }
+    }
+    
     //
     // Getter to retrieve the channel title
     //
@@ -239,6 +245,20 @@ class RSSFeed : NSObject, NSCoding, RSSParserDelegate{
     //
     func rssImageDownloadFailure( index : Int ){
         delegate?.rssFeedImageNotDownloaded?( index, entry: entries[index] )
+    }
+    
+    //
+    //
+    //
+    func rssParsingError() {
+        delegate?.rssFeedError?( self )
+    }
+    
+    //
+    //
+    //
+    func rssValidationError() {
+        delegate?.rssFeedError?( self )
     }
 }
 

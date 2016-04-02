@@ -31,9 +31,14 @@ import Foundation
     optional func rssFeedDownloadFailure()
 
     //
-    // Method called hwne the Feed updates
+    // Method called when the Feed updates
     //
     optional func rssFeedUpdated()
+    
+    //
+    // Method called when there is an error with the RSS Feed
+    //
+    optional func rssFeedError( feed : RSSFeed )
     
     //
     // Method called when an image begins downloading
