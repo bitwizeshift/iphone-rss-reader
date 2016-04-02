@@ -15,6 +15,7 @@ protocol SideTableViewControllerDelegate {
 class SideTableViewController: UITableViewController {
     var delegate: SideTableViewControllerDelegate?
     @IBOutlet weak var newSourceField: UITextField!
+    var editMode = false
 
 
     override func viewDidLoad() {
@@ -23,7 +24,23 @@ class SideTableViewController: UITableViewController {
         // self.clearsSelectionOnViewWillAppear = false
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
+        
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+    }
+    //
+    //  Edit Sources
+    //
+    @IBAction func editSources(sender: AnyObject) {
+        if (editMode){
+            super.setEditing(false, animated: true)
+            self.tableView.setEditing(false, animated: true)
+            editMode = false
+        }else{
+            super.setEditing(true, animated: true)
+            self.tableView.setEditing(true, animated: true)
+            editMode = true
+        }
+        
     }
     //
     //  ADD New URL

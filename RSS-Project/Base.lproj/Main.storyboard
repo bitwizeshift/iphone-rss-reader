@@ -40,7 +40,11 @@
                                         <navigationItem id="K0t-KV-c2f">
                                             <nil key="title"/>
                                             <leftBarButtonItems>
-                                                <barButtonItem systemItem="edit" id="PAy-Qw-EIP"/>
+                                                <barButtonItem systemItem="edit" id="PAy-Qw-EIP">
+                                                    <connections>
+                                                        <action selector="editSources:" destination="d99-PV-BRf" id="wdy-jx-x0H"/>
+                                                    </connections>
+                                                </barButtonItem>
                                                 <barButtonItem style="plain" systemItem="add" id="Ivo-lt-aYg">
                                                     <connections>
                                                         <action selector="addSource:" destination="d99-PV-BRf" id="oap-r9-ZpM"/>
