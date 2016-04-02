@@ -48,7 +48,7 @@
                                                 </barButtonItem>
                                             </leftBarButtonItems>
                                             <textField key="titleView" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="&quot;http://rss.cbc.ca/lineup/topstories.xml&quot;" textAlignment="natural" minimumFontSize="17" id="FTA-aG-hM5">
-                                                <rect key="frame" x="104" y="7" width="474" height="30"/>
+                                                <rect key="frame" x="103" y="7" width="474" height="30"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="350" id="uSh-Ty-IBF"/>
@@ -107,8 +107,8 @@
                                                 </mask>
                                             </variation>
                                         </imageView>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6Tf-j2-saO">
-                                            <rect key="frame" x="78" y="28" width="42" height="20"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6Tf-j2-saO">
+                                            <rect key="frame" x="78" y="28" width="42" height="21"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
@@ -139,6 +139,7 @@
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="sourceImg" destination="qpV-gN-Sjf" id="CdJ-z9-ETt"/>
+                                    <outlet property="sourceLabel" destination="6Tf-j2-saO" id="mMa-HW-Pdy"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -153,7 +154,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pGT-HC-24H" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="801" y="241"/>
+            <point key="canvasLocation" x="801" y="247"/>
         </scene>
         <!--My Feed-->
         <scene sceneID="DTQ-hk-QyE">

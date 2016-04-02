@@ -9,7 +9,9 @@
 import UIKit
 
 class SideTableViewCell: UITableViewCell {
+    
     @IBOutlet weak var sourceImg: UIImageView!
+    @IBOutlet weak var sourceLabel: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
