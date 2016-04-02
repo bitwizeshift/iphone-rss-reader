@@ -114,6 +114,21 @@ class SideTableViewController: UITableViewController {
     //
     // ADD New URL
     //
+    @IBAction func editSources(sender: AnyObject) {
+        if (editMode){
+            super.setEditing(false, animated: true)
+            self.tableView.setEditing(false, animated: true)
+            editMode = false
+        }else{
+            super.setEditing(true, animated: true)
+            self.tableView.setEditing(true, animated: true)
+            editMode = true
+        }
+        
+    }
+    //
+    //  ADD New URL
+    //
     @IBAction func addSource(sender: AnyObject) {
         print(self.newSourceField.text)
         if let urlString = self.newSourceField.text{
@@ -157,6 +172,9 @@ class SideTableViewController: UITableViewController {
 
         if let feed = delegate?.feedAtIndex( indexPath.row ){
             cell.sourceLabel.text = feed.channelTitle
+            if let data = feed.channelImageData {
+                cell.sourceImg.image = UIImage( data: data )
+            }
         }
 
         return cell

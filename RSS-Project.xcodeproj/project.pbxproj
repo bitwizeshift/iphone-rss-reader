@@ -22,6 +22,7 @@
 		5606898F1C9DED2000293A51 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5606898E1C9DED2000293A51 /* Settings.swift */; };
 		560689911C9DF5F100293A51 /* RSSCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 560689901C9DF5F100293A51 /* RSSCollection.swift */; };
 		564319D41C9E02EF0020A542 /* RSSSharedCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 564319D31C9E02EF0020A542 /* RSSSharedCollection.swift */; };
+		568945411CB0532B003CF770 /* Stack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568945401CB0532B003CF770 /* Stack.swift */; };
 		ECC7A2AE1C9DDBA500999899 /* SideTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECC7A2AD1C9DDBA500999899 /* SideTableViewController.swift */; };
 		ECC7A2B01C9DDBB600999899 /* SideTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECC7A2AF1C9DDBB600999899 /* SideTableViewCell.swift */; };
 		ECC7A2B21C9DDF8B00999899 /* MainTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECC7A2B11C9DDF8B00999899 /* MainTableViewController.swift */; };
@@ -50,6 +51,7 @@
 		5606898E1C9DED2000293A51 /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		560689901C9DF5F100293A51 /* RSSCollection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSSCollection.swift; sourceTree = "<group>"; };
 		564319D31C9E02EF0020A542 /* RSSSharedCollection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSSSharedCollection.swift; sourceTree = "<group>"; };
+		568945401CB0532B003CF770 /* Stack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stack.swift; sourceTree = "<group>"; };
 		ECC7A2AD1C9DDBA500999899 /* SideTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SideTableViewController.swift; sourceTree = "<group>"; };
 		ECC7A2AF1C9DDBB600999899 /* SideTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SideTableViewCell.swift; sourceTree = "<group>"; };
 		ECC7A2B11C9DDF8B00999899 /* MainTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainTableViewController.swift; sourceTree = "<group>"; };
@@ -85,6 +87,7 @@
 			children = (
 				2799E5BC1C9E965100DA5C0B /* RefCountedIndicator.swift */,
 				560689831C9DD57100293A51 /* StringExtensions.swift */,
+				568945401CB0532B003CF770 /* Stack.swift */,
 			);
 			name = Util;
 			sourceTree = "<group>";
@@ -237,6 +240,7 @@
 				ECC7A2BA1C9DF0A700999899 /* RightTableViewCell.swift in Sources */,
 				ECC7A2B61C9DE08C00999899 /* ContainerViewController.swift in Sources */,
 				ECC7A2B01C9DDBB600999899 /* SideTableViewCell.swift in Sources */,
+				568945411CB0532B003CF770 /* Stack.swift in Sources */,
 				ECC7A2B21C9DDF8B00999899 /* MainTableViewController.swift in Sources */,
 				ECC7A2B41C9DDF9A00999899 /* MainTableViewCell.swift in Sources */,
 				ECC7A2B81C9DF09900999899 /* RightTableViewController.swift in Sources */,

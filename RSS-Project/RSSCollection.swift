@@ -109,7 +109,7 @@ class RSSCollection : NSObject, NSCoding {
                     entries.append(entry)
                 }
             }
-            return entries.sort(){ return $0.pubDate < $1.pubDate }
+            return entries.sort(){ return $0.pubDate > $1.pubDate }
         }
     }
 

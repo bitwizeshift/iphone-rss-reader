@@ -15,12 +15,14 @@ protocol MainTableViewControllerDelegate {
     optional func collapseSidePanels()
 }
 class MainTableViewController: UITableViewController, RSSParserDelegate, RSSFeedDelegate {
-    
+
     //------------------------------------------------------------------------
     // MARK: - Public Attributes
     //------------------------------------------------------------------------
 
     var delegate : MainTableViewControllerDelegate?
+    
+    var updateTimer : NSTimer? = nil
 
     //------------------------------------------------------------------------
     // MARK: - Private Attributes
@@ -66,11 +68,11 @@ class MainTableViewController: UITableViewController, RSSParserDelegate, RSSFeed
         
         collection = RSSSharedCollection.getInstance().getCollection()
         collection!.delegate = self
-        collection!.clear()
+        //collection!.clear()
         collection!.addFeedURL( NSURL(string: "http://rss.cbc.ca/lineup/topstories.xml")! )
         collection!.addFeedURL( NSURL(string: "http://www.nbcnewyork.com/news/top-stories/?rss=y&embedThumb=y&summary=y")! )
         collection!.addFeedURL( NSURL(string: "http://rss.cnn.com/rss/cnn_topstories.rss")! )
-        //collection!.addFeedURL( NSURL(string: "http://feeds.feedburner.com/patheos/igFf?format=xml")! )
+        collection!.addFeedURL( NSURL(string: "http://feeds.feedburner.com/patheos/igFf?format=xml")! )
         
         
 
@@ -78,6 +80,9 @@ class MainTableViewController: UITableViewController, RSSParserDelegate, RSSFeed
         
         //enable pull down refresh
         self.refreshControl?.addTarget(self, action: "pullDownRefresh:", forControlEvents: UIControlEvents.ValueChanged)
+        
+        // Set update timer
+        self.updateTimer = NSTimer.scheduledTimerWithTimeInterval(5*60.0, target: self, selector: "reload", userInfo: nil, repeats: true)
         
         self.tableView.reloadData()
     }
@@ -189,14 +194,22 @@ class MainTableViewController: UITableViewController, RSSParserDelegate, RSSFeed
     // The title for the individual section
     //
     override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return self.sections[section]
+        if self.sections.count > 0{
+            return self.sections[section]
+        }else{
+            return nil
+        }
     }
 
     //
     // The number of rows in the section
     //
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.entries[section].count
+        if( self.entries.count > 0 ){
+            return self.entries[section].count
+        }else{
+            return 0;
+        }
     }
     
     //
@@ -212,8 +225,20 @@ class MainTableViewController: UITableViewController, RSSParserDelegate, RSSFeed
             // TODO: Set some default image for one not found
         }
         
-        cell.storyTitle.text    = entry.title
-        cell.storyCategory.text = entry.category
+        let fromFormatter = NSDateFormatter()
+        fromFormatter.dateFormat = "YYYY-MM-dd HH:mm:ss"
+        
+        let toFormatter = NSDateFormatter()
+        toFormatter.dateFormat = "EEEE, dd MMMM YYYY h:mm a"
+        
+        
+        cell.storyTitle.text   = entry.title
+        
+        if let date = fromFormatter.dateFromString(entry.pubDate){
+            cell.storyPubDate.text = toFormatter.stringFromDate(date)
+        }else{
+            cell.storyPubDate.text = "Unknown"
+        }
 
         return cell
     }
@@ -479,6 +504,7 @@ extension MainTableViewController: SideTableViewControllerDelegate {
     //
     func removeFeed( index : Int ){
         collection!.removeFeed( collection!.feeds[index] )
+        self.reorder()
     }
     
     //

@@ -36,17 +36,21 @@ class RSSParser: NSObject, NSXMLParserDelegate {
     static private let CHANNEL_IMAGE_TAGS = ["url","title","link"]
     
     // List of all the entry tags we care about
-    static private var ENTRY_TAGS = ["title","link","pubdate","author","description","category"]
+    static private var ENTRY_TAGS = ["title","link","pubDate","author","description","category"]
     
     static private let imageQueue = dispatch_queue_create("ImageQueue", DISPATCH_QUEUE_CONCURRENT);
     
-    private let dateFormatter = NSDateFormatter()
+    private let fromFormatter = NSDateFormatter()
+    private let toFormatter = NSDateFormatter()
     
     private var currentEntry : RSSEntry? = nil
     private var inChannel      = false
+    private var parentElement   = ""
     private var currentElement  = ""
     private var foundCharacters = ""
     private var parser : NSXMLParser?;
+    
+    private var parents : Stack<String> = Stack()
     
     private var imageIndices : [Int] = [];
     
@@ -96,7 +100,8 @@ class RSSParser: NSObject, NSXMLParserDelegate {
     // the parsing is finished
     //
     func parse( onCompletion : ()-> Void){
-        self.dateFormatter.dateFormat = "EEE, dd MMM YY H:mm:ss ZZZ"
+        self.fromFormatter.dateFormat = "EEE, dd MMM yy H:mm:ss ZZZ"
+        self.toFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         parser!.parse()
         onCompletion()
     }
@@ -134,6 +139,7 @@ class RSSParser: NSObject, NSXMLParserDelegate {
             
         }
         
+        parents.push( elementName )
         currentElement = elementName
     }
     
@@ -146,6 +152,8 @@ class RSSParser: NSObject, NSXMLParserDelegate {
         if inChannel && currentEntry == nil {
             if (RSSParser.CHANNEL_TAGS.contains(currentElement)){
                 foundCharacters += string.unescapedHTMLString
+            }else if currentElement == "url"{
+                foundCharacters += string;
             }
         } else if currentEntry != nil {
             if (RSSParser.ENTRY_TAGS.contains(currentElement)){
@@ -158,13 +166,16 @@ class RSSParser: NSObject, NSXMLParserDelegate {
     // Called on ending (closing) tag of element
     //
     internal func parser(parser: NSXMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
-        
+        parents.pop()
         if inChannel && currentEntry == nil {
             if elementName == "lastBuildDate"{
                 //channel!.lastBuild = dateFormatter.dateFromString(foundCharacters)
             }
             else if elementName == "title"{
                 channel!.title = foundCharacters.trim()
+            }
+            else if (parents.peek() == "image" && elementName == "url"){
+                channel!.imageURL = NSURL( string: foundCharacters.trim() );
             }
             // Handle category information
         } else if let entry = currentEntry {
@@ -174,7 +185,16 @@ class RSSParser: NSObject, NSXMLParserDelegate {
                 entry.link = NSURL( string: foundCharacters.trim())
             }
             else if elementName == "pubDate"{
-                entry.pubDate = foundCharacters.trim();
+                var timestring = foundCharacters.trim()
+                // NSDate for some reason doesn't support
+                timestring = timestring.replace("EDT",withString: "-0400");
+                timestring = timestring.replace("EST",withString: "-0500");
+                let date = fromFormatter.dateFromString(timestring)
+                if let date = date{
+                    entry.pubDate = toFormatter.stringFromDate(date)
+                }else{
+                    print("ERROR READING DATE FORMAT")
+                }
             }
             else if elementName == "title"{
                 entry.title = foundCharacters.trim();
@@ -268,6 +288,25 @@ class RSSParser: NSObject, NSXMLParserDelegate {
     internal func parserDidEndDocument(parser: NSXMLParser) {
         self.delegate?.rssCompleteParsing?()
         
+        // Download Feed image, if one exists
+        if channel!.imageData == nil{
+            if let url = channel!.imageURL{
+                delegate?.rssImageBeginDownload?(-1)
+                dispatch_async(RSSParser.imageQueue, {
+                    self.channel!.imageData = NSData( contentsOfURL: url )
+                    
+                    if self.channel!.imageData != nil {
+                        dispatch_async(dispatch_get_main_queue(), {
+                            self.delegate?.rssImageDownloadSuccess?(-1)
+                        });
+                    }else{
+                        dispatch_async(dispatch_get_main_queue(), {
+                            self.delegate?.rssImageDownloadSuccess?(-1)
+                        });
+                    }
+                });
+            }
+        }
         
         // Download all images for feeds
         for i in imageIndices{

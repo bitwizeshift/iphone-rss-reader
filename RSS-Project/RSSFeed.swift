@@ -26,7 +26,6 @@ class RSSFeed : NSObject, NSCoding, RSSParserDelegate{
     
     private let feedURL     : NSURL;
     private var channel     : RSSChannel = RSSChannel();
-    private var recentEntry : NSDate? = nil;
     private var feedData    : NSData = NSData();
 
     private var parser      : RSSParser? = nil
@@ -106,7 +105,8 @@ class RSSFeed : NSObject, NSCoding, RSSParserDelegate{
     //
     var entries : [RSSEntry] {
         get{
-            return channel.entries
+            let entries = channel.entries
+            return entries.sort(){ $0.title > $1.title }
         }
     }
     
@@ -141,9 +141,7 @@ class RSSFeed : NSObject, NSCoding, RSSParserDelegate{
         parser = RSSParser( data: self.feedData, channel: channel )
         parser!.delegate = self
         
-        parser!.parse(){
-            self.recentEntry = NSDate()
-        }
+        parser!.parse()
     }
     
     //
@@ -230,21 +228,33 @@ class RSSFeed : NSObject, NSCoding, RSSParserDelegate{
     // Method called every time an RSS image begins downloading
     //
     func rssImageBeginDownload( index : Int ){
-        delegate?.rssFeedBeginImageDownload?( index, entry: entries[index] )
+        if index == -1{
+            delegate?.rssFeedBeginImageDownload?( index, entry: nil )
+        }else{
+            delegate?.rssFeedBeginImageDownload?( index, entry: entries[index] )
+        }
     }
     
     //
     // Method called every time an RSS Image is successfully downloaded
     //
     func rssImageDownloadSuccess( index : Int ){
-        delegate?.rssFeedImageDownloaded?( index, entry: entries[index] )
+        if index == -1{
+            delegate?.rssFeedImageDownloaded?( index, entry: nil )
+        }else{
+            delegate?.rssFeedImageDownloaded?( index, entry: entries[index] )
+        }
     }
     
     //
     // Method called every time an RSS Image is not successfully downloaded
     //
     func rssImageDownloadFailure( index : Int ){
-        delegate?.rssFeedImageNotDownloaded?( index, entry: entries[index] )
+        if index == -1{
+            delegate?.rssFeedImageNotDownloaded?( index, entry: nil )
+        }else{
+            delegate?.rssFeedImageNotDownloaded?( index, entry: entries[index] )
+        }
     }
     
     //

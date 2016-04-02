@@ -12,7 +12,7 @@ class MainTableViewCell: UITableViewCell {
 
     @IBOutlet weak var storyImg: UIImageView!
     @IBOutlet weak var storyTitle: UILabel!
-    @IBOutlet weak var storyCategory: UILabel!
+    @IBOutlet weak var storyPubDate: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
