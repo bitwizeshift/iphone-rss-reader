@@ -57,16 +57,49 @@ class SideTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
+        //Looks for single or multiple taps.
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "dismissKeyboard")
+        view.addGestureRecognizer(tap)
+        // Long tap recognizer for deleting sources
+        let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: "longPress:")
+        self.view.addGestureRecognizer(longPressRecognizer)
+    }
+    //
+    //Called, when long press occurred
+    //
+    func longPress(longPressGestureRecognizer: UILongPressGestureRecognizer) {
         
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+        
+        if longPressGestureRecognizer.state == UIGestureRecognizerState.Began {
+        
+            let touchPoint = longPressGestureRecognizer.locationInView(self.view)
+            if let indexPath = self.tableView.indexPathForRowAtPoint(touchPoint) {
+                if let feed = delegate?.feedAtIndex( indexPath.row ){
+                    let deleteMsg = "Are you sure you wish to delete " + feed.channelTitle+"?"
+                    let refreshAlert = UIAlertController(title: "Delete", message: deleteMsg, preferredStyle: UIAlertControllerStyle.Alert)
+                    refreshAlert.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: { (action: UIAlertAction!) in
+                    }))
+                    refreshAlert.addAction(UIAlertAction(title: "Delete", style: .Destructive
+                        , handler: { (action: UIAlertAction!) in
+                        self.delegate?.removeFeed(indexPath.row)
+                            self.tableView.reloadData()
+                    }))
+                    presentViewController(refreshAlert, animated: true, completion: nil)
+                }
+            }
+        }
     }
     
     //
-    //  Edit Sources
+    //Calls this function when the tap is recognized.
+    //
+    func dismissKeyboard() {
+        //Causes the view (or one of its embedded text fields) to resign the first responder status.
+        view.endEditing(true)
+    }
+    
+    //
+    // ADD New URL
     //
     @IBAction func editSources(sender: AnyObject) {
         if (editMode){

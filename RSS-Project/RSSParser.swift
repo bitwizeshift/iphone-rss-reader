@@ -174,8 +174,8 @@ class RSSParser: NSObject, NSXMLParserDelegate {
             else if elementName == "title"{
                 channel!.title = foundCharacters.trim()
             }
-            else if (parents.peek() == "image" && currentElement == "url"){
-                channel!.imageURL = NSURL( string: foundCharacters );
+            else if (parents.peek() == "image" && elementName == "url"){
+                channel!.imageURL = NSURL( string: foundCharacters.trim() );
             }
             // Handle category information
         } else if let entry = currentEntry {
@@ -287,23 +287,25 @@ class RSSParser: NSObject, NSXMLParserDelegate {
     //
     internal func parserDidEndDocument(parser: NSXMLParser) {
         self.delegate?.rssCompleteParsing?()
+        
         // Download Feed image, if one exists
-        if let url = channel!.imageURL{
-
-            delegate?.rssImageBeginDownload?(-1)
-            dispatch_async(RSSParser.imageQueue, {
-                self.channel!.imageData = NSData( contentsOfURL: url )
-                
-                if self.channel!.imageData != nil {
-                    dispatch_async(dispatch_get_main_queue(), {
-                        self.delegate?.rssImageDownloadSuccess?(-1)
-                    });
-                }else{
-                    dispatch_async(dispatch_get_main_queue(), {
-                        self.delegate?.rssImageDownloadSuccess?(-1)
-                    });
-                }
-            });
+        if channel!.imageData == nil{
+            if let url = channel!.imageURL{
+                delegate?.rssImageBeginDownload?(-1)
+                dispatch_async(RSSParser.imageQueue, {
+                    self.channel!.imageData = NSData( contentsOfURL: url )
+                    
+                    if self.channel!.imageData != nil {
+                        dispatch_async(dispatch_get_main_queue(), {
+                            self.delegate?.rssImageDownloadSuccess?(-1)
+                        });
+                    }else{
+                        dispatch_async(dispatch_get_main_queue(), {
+                            self.delegate?.rssImageDownloadSuccess?(-1)
+                        });
+                    }
+                });
+            }
         }
         
         // Download all images for feeds

@@ -105,7 +105,8 @@ class RSSFeed : NSObject, NSCoding, RSSParserDelegate{
     //
     var entries : [RSSEntry] {
         get{
-            return channel.entries
+            let entries = channel.entries
+            return entries.sort(){ $0.title > $1.title }
         }
     }
     
