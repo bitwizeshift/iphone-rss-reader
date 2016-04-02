@@ -4,6 +4,7 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
     </dependencies>
     <scenes>
         <!--Side Table View Controller-->
@@ -33,49 +34,50 @@
                                         </mask>
                                     </variation>
                                 </imageView>
-                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="&quot;http://rss.cbc.ca/lineup/topstories.xml&quot;" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="FTA-aG-hM5">
-                                    <rect key="frame" x="62" y="163" width="321" height="30"/>
-                                    <constraints>
-                                        <constraint firstAttribute="width" constant="350" id="uSh-Ty-IBF"/>
-                                    </constraints>
-                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                    <textInputTraits key="textInputTraits"/>
-                                    <variation key="default">
-                                        <mask key="constraints">
-                                            <exclude reference="uSh-Ty-IBF"/>
-                                        </mask>
-                                    </variation>
-                                </textField>
-                                <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hfm-6d-YxI">
-                                    <rect key="frame" x="16" y="162" width="30" height="30"/>
-                                    <constraints>
-                                        <constraint firstAttribute="width" constant="30" id="BlR-IT-8EH"/>
-                                    </constraints>
-                                    <state key="normal" title="Add">
-                                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                    </state>
-                                    <connections>
-                                        <action selector="addNewSource:" destination="d99-PV-BRf" eventType="touchUpInside" id="HJt-9i-RtJ"/>
-                                    </connections>
-                                </button>
+                                <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Abe-mA-eYw">
+                                    <rect key="frame" x="0.0" y="156" width="600" height="44"/>
+                                    <items>
+                                        <navigationItem id="K0t-KV-c2f">
+                                            <nil key="title"/>
+                                            <leftBarButtonItems>
+                                                <barButtonItem systemItem="edit" id="PAy-Qw-EIP"/>
+                                                <barButtonItem style="plain" systemItem="add" id="Ivo-lt-aYg">
+                                                    <connections>
+                                                        <action selector="addSource:" destination="d99-PV-BRf" id="oap-r9-ZpM"/>
+                                                    </connections>
+                                                </barButtonItem>
+                                            </leftBarButtonItems>
+                                            <textField key="titleView" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="&quot;http://rss.cbc.ca/lineup/topstories.xml&quot;" textAlignment="natural" minimumFontSize="17" id="FTA-aG-hM5">
+                                                <rect key="frame" x="104" y="7" width="474" height="30"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="350" id="uSh-Ty-IBF"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <textInputTraits key="textInputTraits"/>
+                                                <variation key="default">
+                                                    <mask key="constraints">
+                                                        <exclude reference="uSh-Ty-IBF"/>
+                                                    </mask>
+                                                </variation>
+                                            </textField>
+                                        </navigationItem>
+                                    </items>
+                                </navigationBar>
                             </subviews>
                             <color key="backgroundColor" red="0.32941176470588235" green="0.32941176470588235" blue="0.32941176470588235" alpha="1" colorSpace="calibratedRGB"/>
                             <constraints>
-                                <constraint firstAttribute="bottom" secondItem="hfm-6d-YxI" secondAttribute="bottom" constant="8" id="1Jy-tD-cyS"/>
+                                <constraint firstItem="Abe-mA-eYw" firstAttribute="leading" secondItem="BiI-Qe-7j3" secondAttribute="leading" id="1xf-8o-WAV"/>
                                 <constraint firstItem="4wE-2x-y2j" firstAttribute="centerY" secondItem="BiI-Qe-7j3" secondAttribute="centerY" id="8b0-E7-qQc"/>
-                                <constraint firstAttribute="bottom" secondItem="FTA-aG-hM5" secondAttribute="bottom" constant="6" id="CCm-gk-z8b"/>
-                                <constraint firstAttribute="bottom" secondItem="FTA-aG-hM5" secondAttribute="bottom" constant="3" id="EPq-ef-6MH"/>
-                                <constraint firstAttribute="trailing" secondItem="FTA-aG-hM5" secondAttribute="trailing" constant="60" id="Eme-Ur-3Dn"/>
-                                <constraint firstItem="hfm-6d-YxI" firstAttribute="leading" secondItem="BiI-Qe-7j3" secondAttribute="leading" constant="8" id="GWu-RL-PuS"/>
+                                <constraint firstAttribute="bottom" secondItem="Abe-mA-eYw" secondAttribute="bottom" id="NCP-RB-C7N"/>
                                 <constraint firstItem="4wE-2x-y2j" firstAttribute="centerX" secondItem="BiI-Qe-7j3" secondAttribute="centerX" id="coI-0G-tbC"/>
                                 <constraint firstItem="4wE-2x-y2j" firstAttribute="leading" secondItem="BiI-Qe-7j3" secondAttribute="leading" constant="-320" id="h60-Ju-Ark"/>
+                                <constraint firstAttribute="trailing" secondItem="Abe-mA-eYw" secondAttribute="trailing" id="oIY-G8-eaH"/>
                                 <constraint firstItem="4wE-2x-y2j" firstAttribute="centerX" secondItem="BiI-Qe-7j3" secondAttribute="centerX" id="pHj-Mz-fUR"/>
                                 <constraint firstItem="4wE-2x-y2j" firstAttribute="leading" secondItem="BiI-Qe-7j3" secondAttribute="leading" constant="100" id="suH-9d-gdj"/>
-                                <constraint firstItem="FTA-aG-hM5" firstAttribute="leading" secondItem="hfm-6d-YxI" secondAttribute="trailing" constant="8" id="urB-Vp-JFA"/>
                             </constraints>
                             <variation key="default">
                                 <mask key="constraints">
-                                    <exclude reference="EPq-ef-6MH"/>
                                     <exclude reference="h60-Ju-Ark"/>
                                     <exclude reference="pHj-Mz-fUR"/>
                                     <exclude reference="suH-9d-gdj"/>
@@ -90,7 +92,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="80"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="space-invader-small" translatesAutoresizingMaskIntoConstraints="NO" id="qpV-gN-Sjf">
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="img_404" translatesAutoresizingMaskIntoConstraints="NO" id="qpV-gN-Sjf">
                                             <rect key="frame" x="8" y="8" width="60" height="60"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="60" id="6bz-hP-9oq"/>
@@ -135,6 +137,9 @@
                                         </mask>
                                     </variation>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="sourceImg" destination="qpV-gN-Sjf" id="CdJ-z9-ETt"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -167,7 +172,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="80"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="space-invader-small" translatesAutoresizingMaskIntoConstraints="NO" id="Ypw-hB-gWy">
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="img_404" translatesAutoresizingMaskIntoConstraints="NO" id="Ypw-hB-gWy">
                                             <rect key="frame" x="10" y="5" width="70" height="70"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="70" id="J5s-x0-cCI"/>
@@ -404,10 +409,10 @@
     <resources>
         <image name="filter-icon-large" width="120" height="120"/>
         <image name="filter-icon-small" width="33" height="33"/>
+        <image name="img_404" width="400" height="400"/>
         <image name="left-icon-small" width="35" height="35"/>
         <image name="right-icon-small" width="35" height="35"/>
         <image name="rss-icon-large" width="120" height="120"/>
         <image name="rss-icon-small" width="33" height="33"/>
-        <image name="space-invader-small" width="35" height="35"/>
     </resources>
 </document>

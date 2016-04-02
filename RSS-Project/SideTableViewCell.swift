@@ -9,10 +9,13 @@
 import UIKit
 
 class SideTableViewCell: UITableViewCell {
-
+    @IBOutlet weak var sourceImg: UIImageView!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        self.sourceImg.layer.cornerRadius = 5
+        self.sourceImg.clipsToBounds = true
     }
 
     override func setSelected(selected: Bool, animated: Bool) {

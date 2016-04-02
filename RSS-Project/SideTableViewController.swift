@@ -51,8 +51,9 @@ protocol SideTableViewControllerDelegate {
 //
 class SideTableViewController: UITableViewController {
     var delegate: SideTableViewControllerDelegate?
-    
     @IBOutlet weak var newSourceField: UITextField!
+
+
     override func viewDidLoad() {
         super.viewDidLoad()
     }
@@ -60,6 +61,9 @@ class SideTableViewController: UITableViewController {
     //
     // ADD New URL
     //
+    @IBAction func addSource(sender: AnyObject) {
+        print(self.newSourceField.text)
+    }
     @IBAction func addNewSource(sender: AnyObject) {
         print(self.newSourceField.text)
         if let urlString = self.newSourceField.text{
