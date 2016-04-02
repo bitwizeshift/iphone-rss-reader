@@ -57,10 +57,31 @@ class SideTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        // Uncomment the following line to preserve selection between presentations
+        // self.clearsSelectionOnViewWillAppear = false
+
+        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
+        
+        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
     }
     
     //
-    // ADD New URL
+    //  Edit Sources
+    //
+    @IBAction func editSources(sender: AnyObject) {
+        if (editMode){
+            super.setEditing(false, animated: true)
+            self.tableView.setEditing(false, animated: true)
+            editMode = false
+        }else{
+            super.setEditing(true, animated: true)
+            self.tableView.setEditing(true, animated: true)
+            editMode = true
+        }
+        
+    }
+    //
+    //  ADD New URL
     //
     @IBAction func addSource(sender: AnyObject) {
         print(self.newSourceField.text)
@@ -105,6 +126,9 @@ class SideTableViewController: UITableViewController {
 
         if let feed = delegate?.feedAtIndex( indexPath.row ){
             cell.sourceLabel.text = feed.channelTitle
+            if let data = feed.channelImageData {
+                cell.sourceImg.image = UIImage( data: data )
+            }
         }
 
         return cell

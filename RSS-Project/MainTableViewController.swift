@@ -189,7 +189,11 @@ class MainTableViewController: UITableViewController, RSSParserDelegate, RSSFeed
     // The title for the individual section
     //
     override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return self.sections[section]
+        if self.sections.count > 0{
+            return self.sections[section]
+        }else{
+            return nil
+        }
     }
 
     //
@@ -212,8 +216,20 @@ class MainTableViewController: UITableViewController, RSSParserDelegate, RSSFeed
             // TODO: Set some default image for one not found
         }
         
-        cell.storyTitle.text    = entry.title
-        cell.storyCategory.text = entry.category
+        let fromFormatter = NSDateFormatter()
+        fromFormatter.dateFormat = "YYYY-MM-dd HH:mm:ss"
+        
+        let toFormatter = NSDateFormatter()
+        toFormatter.dateFormat = "EEEE, dd MMMM YYYY HH:mm:ss"
+        
+        
+        cell.storyTitle.text   = entry.title
+        
+        if let date = fromFormatter.dateFromString(entry.pubDate){
+            cell.storyPubDate.text = toFormatter.stringFromDate(date)
+        }else{
+            cell.storyPubDate.text = "Unknown"
+        }
 
         return cell
     }
