@@ -58,7 +58,12 @@ class WebViewController: UIViewController, UITabBarDelegate, WKNavigationDelegat
             webView.goForward()
         }
     }
-
+    //
+    // Open story in browser
+    //
+    @IBAction func openInBrowser(sender: AnyObject) {
+            UIApplication.sharedApplication().openURL(entry!.link!)
+    }
     
     //------------------------------------------------------------------------
     // MARK: - View Loading
@@ -72,8 +77,6 @@ class WebViewController: UIViewController, UITabBarDelegate, WKNavigationDelegat
         
         // Allow the web-view gestures
         self.webView.allowsBackForwardNavigationGestures = true
-        //add view for web nav bar
-//        webBar.frame = CGRect(x:0, y: 0, width: view.frame.width, height: 30)
         // Set the navigation title
         self.navigationBar.title = entry!.title
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Bookmarks, target: self, action: "addBookmark")
@@ -112,7 +115,6 @@ class WebViewController: UIViewController, UITabBarDelegate, WKNavigationDelegat
     // Create the subview layouts
     //
     override func viewWillLayoutSubviews() {
-//        self.webBar.frame = CGRect(x:0, y: 0, width: self.view.frame.size.width, height: 30)
         let TOP_MARGIN    : CGFloat = UIApplication.sharedApplication().statusBarFrame.size.height
         let BOTTOM_MARGIN : CGFloat = 40
         self.webView.frame = CGRectMake(0, TOP_MARGIN, self.view.frame.size.width, self.view.frame.size.height - BOTTOM_MARGIN - TOP_MARGIN)

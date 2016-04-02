@@ -63,9 +63,12 @@ class SideTableViewController: UITableViewController {
         // Long tap recognizer for deleting sources
         let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: "longPress:")
         self.view.addGestureRecognizer(longPressRecognizer)
+        //Short tap recognizer for selecting source
+        let shortPressRecognizer = UITapGestureRecognizer(target: self, action: "shortPress:")
+        self.view.addGestureRecognizer(shortPressRecognizer)
     }
     //
-    //Called, when long press occurred
+    //Called when long press occurred
     //
     func longPress(longPressGestureRecognizer: UILongPressGestureRecognizer) {
         
@@ -88,6 +91,16 @@ class SideTableViewController: UITableViewController {
                 }
             }
         }
+    }
+    
+    //
+    // Called when short press occured
+    //
+    func shortPress(shortPressGesturRecognizer: UITapGestureRecognizer){
+            let touchPoint = shortPressGesturRecognizer.locationInView(self.view)
+            if let indexPath = self.tableView.indexPathForRowAtPoint(touchPoint) {
+                delegate?.filterBySource( indexPath.row)
+            }
     }
     
     //

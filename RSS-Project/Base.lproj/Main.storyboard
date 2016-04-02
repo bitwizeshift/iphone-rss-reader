@@ -43,11 +43,11 @@
                                                     <action selector="addSource:" destination="d99-PV-BRf" id="oap-r9-ZpM"/>
                                                 </connections>
                                             </barButtonItem>
-                                            <textField key="titleView" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="&quot;http://rss.cbc.ca/lineup/topstories.xml&quot;" textAlignment="natural" minimumFontSize="17" id="FTA-aG-hM5">
-                                                <rect key="frame" x="63" y="7" width="474" height="30"/>
+                                            <textField key="titleView" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" placeholderIntrinsicWidth="474" placeholderIntrinsicHeight="30" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="&quot;http://rss.cbc.ca/lineup/topstories.xml&quot;" textAlignment="natural" minimumFontSize="17" id="FTA-aG-hM5">
+                                                <rect key="frame" x="160.5" y="7" width="279" height="30"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" constant="350" id="uSh-Ty-IBF"/>
+                                                    <constraint firstAttribute="width" constant="330" id="uSh-Ty-IBF"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits"/>
@@ -150,7 +150,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pGT-HC-24H" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="801" y="247"/>
+            <point key="canvasLocation" x="801" y="269"/>
         </scene>
         <!--My Feed-->
         <scene sceneID="DTQ-hk-QyE">
@@ -276,18 +276,25 @@
                                             <action selector="backwardNav:" destination="fOR-2l-gof" id="HOA-NX-mmq"/>
                                         </connections>
                                     </barButtonItem>
+                                    <barButtonItem width="43" style="plain" systemItem="fixedSpace" id="gxr-rb-H9q"/>
+                                    <barButtonItem image="right-icon-small" id="oq8-PM-xO9">
+                                        <connections>
+                                            <action selector="forwardNav:" destination="fOR-2l-gof" id="c1K-LY-nb8"/>
+                                        </connections>
+                                    </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="mEz-Z4-dP1"/>
                                     <barButtonItem systemItem="refresh" id="Lfg-dD-PaX">
                                         <connections>
                                             <action selector="refreshWebView:" destination="fOR-2l-gof" id="5DT-Qk-XLm"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="Rsd-Eh-Ca3"/>
-                                    <barButtonItem image="right-icon-small" id="oq8-PM-xO9">
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="SF7-jW-kHn"/>
+                                    <barButtonItem image="web-icon-small" id="76p-E7-i5U">
                                         <connections>
-                                            <action selector="forwardNav:" destination="fOR-2l-gof" id="c1K-LY-nb8"/>
+                                            <action selector="openInBrowser:" destination="fOR-2l-gof" id="QTL-WT-DYZ"/>
                                         </connections>
                                     </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="Rsd-Eh-Ca3"/>
                                 </items>
                             </toolbar>
                         </subviews>
@@ -411,5 +418,6 @@
         <image name="right-icon-small" width="35" height="35"/>
         <image name="rss-icon-large" width="120" height="120"/>
         <image name="rss-icon-small" width="33" height="33"/>
+        <image name="web-icon-small" width="33" height="33"/>
     </resources>
 </document>
