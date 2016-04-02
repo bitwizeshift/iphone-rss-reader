@@ -62,7 +62,16 @@ class WebViewController: UIViewController, UITabBarDelegate, WKNavigationDelegat
     // Open story in browser
     //
     @IBAction func openInBrowser(sender: AnyObject) {
-            UIApplication.sharedApplication().openURL(entry!.link!)
+        let msg = "Are you sure you want to open this story in a browser?"
+        let refreshAlert = UIAlertController(title: "Open in Browser", message: msg, preferredStyle: UIAlertControllerStyle.Alert)
+        refreshAlert.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: { (action: UIAlertAction!) in
+        }))
+        refreshAlert.addAction(UIAlertAction(title: "Open", style: .Default
+            , handler: { (action: UIAlertAction!) in
+                UIApplication.sharedApplication().openURL(self.entry!.link!)
+        }))
+        presentViewController(refreshAlert, animated: true, completion: nil)
+        
     }
     
     //------------------------------------------------------------------------
