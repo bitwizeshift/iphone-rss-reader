@@ -68,8 +68,7 @@ class MainTableViewController: UITableViewController, RSSParserDelegate, RSSFeed
         
         collection = RSSSharedCollection.getInstance().getCollection()
         collection!.delegate = self
-        collection!.clear()
-        collection!.addFeedURL( NSURL(string: "http://rss.cbc.ca/lineup/topstories.xml")! )
+        //collection!.addFeedURL( NSURL(string: "http://rss.cbc.ca/lineup/topstories.xml")! )
         //collection!.addFeedURL( NSURL(string: "http://www.nbcnewyork.com/news/top-stories/?rss=y&embedThumb=y&summary=y")! )
         //collection!.addFeedURL( NSURL(string: "http://rss.cnn.com/rss/cnn_topstories.rss")! )
         //collection!.addFeedURL( NSURL(string: "http://feeds.feedburner.com/patheos/igFf?format=xml")! )
@@ -154,7 +153,10 @@ class MainTableViewController: UITableViewController, RSSParserDelegate, RSSFeed
     // Reorders the RSS Data and reloads the table
     //
     func reorder(){
-        if orderFunc != nil{
+        if collection!.feeds.count == 0{
+            self.sections = [String]()
+            self.entries  = [[RSSEntry]]()
+        }else if orderFunc != nil{
             // This syntax is retarded, Apple.
             self.orderFunc?()
         }
@@ -503,6 +505,7 @@ extension MainTableViewController: SideTableViewControllerDelegate {
         if added{
             self.refresh()
         }
+        self.delegate?.collapseSidePanels?()
         return added
     }
     
