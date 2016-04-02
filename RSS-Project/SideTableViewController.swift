@@ -52,6 +52,7 @@ protocol SideTableViewControllerDelegate {
 class SideTableViewController: UITableViewController {
     var delegate: SideTableViewControllerDelegate?
     @IBOutlet weak var newSourceField: UITextField!
+    var editMode = false
 
 
     override func viewDidLoad() {
